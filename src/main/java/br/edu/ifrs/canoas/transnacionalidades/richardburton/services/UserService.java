@@ -72,14 +72,4 @@ public class UserService {
 
         return response;
     }
-
-    @GET
-    @Path("/sensitive")
-    @Produces(MediaType.TEXT_PLAIN)
-    @RequiresAuthentication
-    public String getSensitiveData(@PathParam("email") String email) {
-
-        return "A lot of sensitive data!";
-    }
-
 }
