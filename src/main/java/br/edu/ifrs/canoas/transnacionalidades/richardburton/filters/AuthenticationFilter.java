@@ -10,7 +10,6 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.StatusType;
 import javax.ws.rs.ext.Provider;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.annotations.RequiresAuthentication;
