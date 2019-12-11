@@ -15,9 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.annotations.RequiresAuthentication;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.dao.UserDAO;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 
 @Path("/users")
 @Stateless
@@ -34,10 +34,10 @@ public class UserService {
         Response response;
         try {
             user = userDAO.create(user);
-            response = Response.status(Response.Status.OK).entity(user).build();
+            response = Response.status(Response.Status.CREATED).entity(user).build();
         } catch (ConstraintViolationException e) {
             e.printStackTrace();
-            response = Response.status(Response.Status.BAD_REQUEST).entity(e).build();
+            response = Response.status(RBHttpStatus.UNPROCESSABLE_ENTITY).entity(e).build();
         }
         return response;
     }
