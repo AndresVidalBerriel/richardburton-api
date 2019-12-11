@@ -11,4 +11,10 @@ import javax.ws.rs.NameBinding;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface RequiresAuthentication {
+
+    public enum Privileges {
+        REGULAR, ADMIN
+    }
+
+    public Privileges privileges() default Privileges.REGULAR;
 }
