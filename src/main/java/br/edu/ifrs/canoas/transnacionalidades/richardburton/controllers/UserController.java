@@ -6,11 +6,9 @@ import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.Response;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.dao.UserDAO;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 
 @Stateless
 public class UserController {
@@ -18,42 +16,28 @@ public class UserController {
     @Inject
     private UserDAO userDAO;
 
-    public Response create(User user) {
+    public User authenticate(String email, String authenticationString) {
 
-        Response response;
-        try {
-            user = userDAO.create(user);
-            response = Response.status(Response.Status.CREATED).entity(user).build();
-        } catch (ConstraintViolationException e) {
-            e.printStackTrace();
-            response = Response.status(RBHttpStatus.UNPROCESSABLE_ENTITY).entity(e).build();
-        }
-        return response;
+        User user = userDAO.retrieve(email);
+        boolean authentic = user != null && user.getAuthenticationString().equals(authenticationString);
+        return authentic ? user : null;
     }
 
-    public Response retrieveAll() {
+    public User create(User user) throws ConstraintViolationException {
 
-        Response response;
-        List<User> users = userDAO.retrieveAll();
-        response = Response.status(Response.Status.OK).entity(users).build();
-
-        return response;
+        return userDAO.create(user);
     }
 
-    public Response retrieve(String email) {
+    public List<User> retrieveAll() {
 
-        Response response;
+        return userDAO.retrieveAll();
+    }
 
-        if (Pattern.matches(User.getEmailformat(), email)) {
+    public User retrieve(String email) throws IllegalArgumentException {
 
-            User user = userDAO.retrieve(email);
-            response = Response.status(Response.Status.OK).entity(user).build();
+        if (Pattern.matches(User.getEmailformat(), email))
+            throw new IllegalArgumentException("The provided email's format is not correct.");
 
-        } else {
-
-            response = Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        return response;
+        return userDAO.retrieve(email);
     }
 }

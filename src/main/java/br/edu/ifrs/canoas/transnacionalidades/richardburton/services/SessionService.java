@@ -7,17 +7,20 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.controllers.SessionController;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.controllers.UserController;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 
 @Path("/session")
 @Stateless
 public class SessionService {
 
     @Inject
-    private SessionController sessionController;
+    private UserController userController;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -25,6 +28,15 @@ public class SessionService {
 
         String email = parameters.get("email");
         String authenticationString = parameters.get("authenticationString");
-        return sessionController.signIn(email, authenticationString);
+
+        User user = userController.authenticate(email, authenticationString);
+
+        if (user != null) {
+
+            String token = JWT.issueToken(email, "richardburton-api", user.isAdmin());
+            return Response.ok(user).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+        }
+
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 }
