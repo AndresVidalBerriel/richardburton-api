@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.controllers;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -8,6 +9,7 @@ import br.edu.ifrs.canoas.transnacionalidades.richardburton.dao.UserDAO;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 
+@Stateless
 public class SessionController {
 
     @Inject
