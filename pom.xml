@@ -207,7 +207,7 @@
 
     <profile>
       <!-- Run with: mvn clean test -P integration-test -->
-      <id>integration-test</id>
+      <id>with-integration-tests</id>
       <dependencies>
         <dependency>
           <groupId>org.wildfly.arquillian</groupId>
