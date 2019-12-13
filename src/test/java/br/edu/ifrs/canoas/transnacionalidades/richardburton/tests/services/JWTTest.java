@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.tests;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.tests.services;
 
 import static org.junit.Assert.assertTrue;
 
