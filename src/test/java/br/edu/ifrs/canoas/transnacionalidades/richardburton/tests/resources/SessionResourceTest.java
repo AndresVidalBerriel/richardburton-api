@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.tests.services;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.tests.resources;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,24 +17,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.controllers.UserController;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.SessionService;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.resources.SessionResource;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 import io.jsonwebtoken.Claims;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SessionServiceTest {
+public class SessionResourceTest {
 
     private User user;
     private HashMap<String, String> successParams;
     private HashMap<String, String> failureParams;
 
     @Mock
-    private UserController userController;
+    private UserService userService;
 
     @InjectMocks
-    private SessionService sessionService = new SessionService();
+    private SessionResource sessionResource = new SessionResource();
 
     @Before
     public void init() {
@@ -49,9 +49,9 @@ public class SessionServiceTest {
         user.setOccupation("occupation");
         user.setNationality("nationality");
 
-        when(userController.authenticate(user.getEmail(), user.getAuthenticationString())).thenReturn(user);
-        when(userController.authenticate(eq(user.getEmail()),
-                AdditionalMatchers.not(eq(user.getAuthenticationString())))).thenReturn(null);
+        when(userService.authenticate(user.getEmail(), user.getAuthenticationString())).thenReturn(user);
+        when(userService.authenticate(eq(user.getEmail()), AdditionalMatchers.not(eq(user.getAuthenticationString()))))
+                .thenReturn(null);
 
         successParams = new HashMap<>();
         successParams.put("email", user.getEmail());
@@ -65,7 +65,7 @@ public class SessionServiceTest {
     @Test
     public void signInFailStatusCode() {
 
-        Response response = sessionService.signIn(failureParams);
+        Response response = sessionResource.signIn(failureParams);
         int expectedStatus = Response.Status.UNAUTHORIZED.getStatusCode();
         int actualStatus = response.getStatus();
         assertEquals(expectedStatus, actualStatus);
@@ -74,7 +74,7 @@ public class SessionServiceTest {
     @Test
     public void signInFailTokenNotPresent() {
 
-        Response response = sessionService.signIn(failureParams);
+        Response response = sessionResource.signIn(failureParams);
         String authorizationHeader = response.getHeaderString(HttpHeaders.AUTHORIZATION);
         assertEquals(null, authorizationHeader);
     }
@@ -82,7 +82,7 @@ public class SessionServiceTest {
     @Test
     public void signInSuccessStatus() {
 
-        Response response = sessionService.signIn(successParams);
+        Response response = sessionResource.signIn(successParams);
 
         int expectedStatus = Response.Status.OK.getStatusCode();
         int actualStatus = response.getStatus();
@@ -93,7 +93,7 @@ public class SessionServiceTest {
     @Test
     public void signInSuccessTokenIsValid() {
 
-        Response response = sessionService.signIn(successParams);
+        Response response = sessionResource.signIn(successParams);
 
         String authorizationHeader = response.getHeaderString(HttpHeaders.AUTHORIZATION);
         String authorizationToken = authorizationHeader.substring("Bearer".length()).trim();
@@ -104,7 +104,7 @@ public class SessionServiceTest {
     @Test
     public void signInSuccesAdminClaim() {
 
-        Response response = sessionService.signIn(successParams);
+        Response response = sessionResource.signIn(successParams);
 
         String authorizationHeader = response.getHeaderString(HttpHeaders.AUTHORIZATION);
         String authorizationToken = authorizationHeader.substring("Bearer".length()).trim();

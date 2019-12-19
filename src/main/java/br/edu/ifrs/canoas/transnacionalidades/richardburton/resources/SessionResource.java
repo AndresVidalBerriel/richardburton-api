@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.services;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.resources;
 
 import java.util.Map;
 
@@ -11,16 +11,16 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.controllers.UserController;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 
 @Path("/session")
 @Stateless
-public class SessionService {
+public class SessionResource {
 
     @Inject
-    private UserController userController;
+    private UserService userService;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +29,7 @@ public class SessionService {
         String email = parameters.get("email");
         String authenticationString = parameters.get("authenticationString");
 
-        User user = userController.authenticate(email, authenticationString);
+        User user = userService.authenticate(email, authenticationString);
 
         if (user != null) {
 
