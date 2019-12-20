@@ -31,7 +31,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
 
-        Response response = null;
+        Response response = Response.status(Response.Status.UNAUTHORIZED).build();
 
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
@@ -65,7 +65,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (JwtException e) {
 
             unathorized = true;
-            response = Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         if (unathorized) {
