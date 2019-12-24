@@ -1,5 +1,7 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.services;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -25,7 +27,20 @@ public class UserService {
 
     public User create(User user) throws ConstraintViolationException {
 
-        return userDAO.create(user);
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] currentAuthenticationString = user.getAuthenticationString().getBytes();
+            byte[] hashedAuthenticationString = md.digest(currentAuthenticationString);
+            user.setAuthenticationString(new String(hashedAuthenticationString));
+            return userDAO.create(user);
+
+        } catch (NoSuchAlgorithmException e) {
+
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public List<User> retrieveAll() {
