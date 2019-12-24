@@ -34,14 +34,25 @@ public class SessionResource {
     public Response signIn(@Context HttpHeaders headers) {
 
         String authorizationHeader = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
+
         if (authorizationHeader == null) {
 
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        String[] credentials = authorizationHeader.substring("Basic".length()).trim().split(":", -1);
-        String email = credentials[0];
-        String authenticationString = credentials[1];
+        String email;
+        String authenticationString;
+
+        try {
+
+            String[] credentials = authorizationHeader.substring("Basic".length()).trim().split(":", -1);
+            email = credentials[0];
+            authenticationString = credentials[1];
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         User user = userService.authenticate(email, authenticationString);
 
