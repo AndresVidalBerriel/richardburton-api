@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 
 @Path("/users")
@@ -59,7 +60,7 @@ public class UserResource {
             User user = userService.retrieve(email);
             return Response.status(Response.Status.OK).entity(user).build();
 
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidEmailFormatException e) {
 
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

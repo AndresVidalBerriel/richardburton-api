@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.resources;
 
+import java.util.Base64;
 import java.util.Map;
 
 import javax.ejb.Stateless;
@@ -11,12 +12,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 
 @Path("/session")
@@ -45,7 +46,8 @@ public class SessionResource {
 
         try {
 
-            String[] credentials = authorizationHeader.substring("Basic".length()).trim().split(":", -1);
+            String token = authorizationHeader.substring("Basic".length()).trim();
+            String[] credentials = new String(Base64.getDecoder().decode(token)).split(":", -1);
             email = credentials[0];
             authenticationString = credentials[1];
 
@@ -54,7 +56,15 @@ public class SessionResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        User user = userService.authenticate(email, authenticationString);
+        User user;
+        try {
+
+            user = userService.authenticate(email, authenticationString);
+
+        } catch (InvalidEmailFormatException e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         if (user != null) {
 

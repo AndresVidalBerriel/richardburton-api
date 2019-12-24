@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.dao.UserDAO;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
 
 @Stateless
 public class UserService {
@@ -18,7 +19,10 @@ public class UserService {
     @Inject
     private UserDAO userDAO;
 
-    public User authenticate(String email, String authenticationString) {
+    public User authenticate(String email, String authenticationString) throws InvalidEmailFormatException {
+
+        if (!Pattern.matches(User.getEmailformat(), email))
+            throw new InvalidEmailFormatException("The provided email's format is not correct.");
 
         User user = userDAO.retrieve(email);
         boolean authentic = user != null && user.getAuthenticationString().equals(authenticationString);
@@ -48,10 +52,10 @@ public class UserService {
         return userDAO.retrieveAll();
     }
 
-    public User retrieve(String email) throws IllegalArgumentException {
+    public User retrieve(String email) throws InvalidEmailFormatException {
 
-        if (Pattern.matches(User.getEmailformat(), email))
-            throw new IllegalArgumentException("The provided email's format is not correct.");
+        if (!Pattern.matches(User.getEmailformat(), email))
+            throw new InvalidEmailFormatException("The provided email's format is not correct.");
 
         return userDAO.retrieve(email);
     }
