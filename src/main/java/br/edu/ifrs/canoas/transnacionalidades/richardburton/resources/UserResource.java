@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.ResourceAlreadyExistsException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 
 @Path("/users")
@@ -36,9 +37,13 @@ public class UserResource {
             user = userService.create(user);
             return Response.status(Response.Status.CREATED).entity(user).build();
 
+        } catch (ResourceAlreadyExistsException e) {
+
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+
         } catch (ConstraintViolationException e) {
 
-            return Response.status(RBHttpStatus.UNPROCESSABLE_ENTITY).entity(e).build();
+            return Response.status(RBHttpStatus.UNPROCESSABLE_ENTITY).entity(e.getMessage()).build();
         }
     }
 
