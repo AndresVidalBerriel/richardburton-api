@@ -1,7 +1,10 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -18,6 +21,10 @@ public class User {
     private static final String emailFormat = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 
     @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(unique = true)
     @Pattern(regexp = emailFormat)
     private String email;
 
@@ -43,6 +50,9 @@ public class User {
 
     @Pattern(regexp = "\\S+")
     private String occupation;
+
+    @Transient
+    private String token;
 
     public String getEmail() {
         return email;
@@ -110,5 +120,13 @@ public class User {
 
     public static String getEmailformat() {
         return emailFormat;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -6,15 +6,19 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.when;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.AdditionalMatchers.and;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Base64.Encoder;
-import java.util.regex.Pattern;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
@@ -126,7 +130,8 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInFailTokenNotPresent() throws URISyntaxException {
+    public void signInFailTokenNotPresent()
+            throws URISyntaxException, UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -134,8 +139,9 @@ public class SessionResourceTest {
 
         dispatcher.invoke(request, response);
 
-        String authorizationHeader = (String) response.getOutputHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        assertEquals(null, authorizationHeader);
+        String responseContent = response.getContentAsString();
+
+        assertEquals("", responseContent);
     }
 
     @Test
@@ -167,7 +173,8 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInSuccessTokenIsValid() throws URISyntaxException {
+    public void signInSuccessTokenIsValid()
+            throws URISyntaxException, UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -175,13 +182,18 @@ public class SessionResourceTest {
 
         dispatcher.invoke(request, response);
 
-        String authorizationHeader = response.getOutputHeaders().getFirst(HttpHeaders.AUTHORIZATION).toString();
-        String authorizationToken = authorizationHeader.substring("Bearer".length()).trim();
-        JWT.decodeToken(authorizationToken);
+        String responseContent = response.getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> responseData;
+        responseData = mapper.readValue(responseContent, HashMap.class);
+        String token = responseData.get("token");
+
+        JWT.decodeToken(token);
     }
 
     @Test
-    public void signInSuccesAdminClaimTrue() throws URISyntaxException {
+    public void signInSuccesAdminClaimTrue()
+            throws URISyntaxException, JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -189,15 +201,20 @@ public class SessionResourceTest {
 
         dispatcher.invoke(request, response);
 
-        String authorizationHeader = response.getOutputHeaders().getFirst(HttpHeaders.AUTHORIZATION).toString();
-        String authorizationToken = authorizationHeader.substring("Bearer".length()).trim();
-        Claims claims = JWT.decodeToken(authorizationToken);
+        String responseContent = response.getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> responseData;
+        responseData = mapper.readValue(responseContent, HashMap.class);
+        String token = responseData.get("token");
+
+        Claims claims = JWT.decodeToken(token);
 
         assertEquals(user.isAdmin(), claims.get("admin"));
     }
 
     @Test
-    public void signInSuccesAdminClaimFalse() throws URISyntaxException {
+    public void signInSuccesAdminClaimFalse()
+            throws URISyntaxException, JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
 
         user.setAdmin(false);
 
@@ -207,12 +224,17 @@ public class SessionResourceTest {
 
         dispatcher.invoke(request, response);
 
-        String authorizationHeader = response.getOutputHeaders().getFirst(HttpHeaders.AUTHORIZATION).toString();
-        String authorizationToken = authorizationHeader.substring("Bearer".length()).trim();
-        Claims claims = JWT.decodeToken(authorizationToken);
+        String responseContent = response.getContentAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> responseData;
+        responseData = mapper.readValue(responseContent, HashMap.class);
+        String token = responseData.get("token");
+
+        Claims claims = JWT.decodeToken(token);
 
         assertEquals(user.isAdmin(), claims.get("admin"));
 
         user.setAdmin(true);
     }
+
 }

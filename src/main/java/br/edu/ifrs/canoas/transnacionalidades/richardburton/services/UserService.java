@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.dao.UserDAO;
@@ -46,7 +47,12 @@ public class UserService {
         return userDAO.retrieveAll();
     }
 
-    public User retrieve(String email) throws InvalidEmailFormatException {
+    public User retrieve(Long id) {
+
+        return userDAO.retrieve(id);
+    }
+
+    public User retrieve(String email) throws InvalidEmailFormatException, NoResultException {
 
         if (!Pattern.matches(User.getEmailformat(), email))
             throw new InvalidEmailFormatException("The provided email's format is not correct.");

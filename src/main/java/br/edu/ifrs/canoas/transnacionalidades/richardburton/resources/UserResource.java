@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.ResourceAlreadyExistsException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 
@@ -56,18 +55,15 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{email}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieve(@PathParam("email") String email) {
+    public Response retrieve(@PathParam("id") Long id) {
 
-        try {
+        User user = userService.retrieve(id);
 
-            User user = userService.retrieve(email);
+        if (user != null)
             return Response.status(Response.Status.OK).entity(user).build();
-
-        } catch (InvalidEmailFormatException e) {
-
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        else
+            return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

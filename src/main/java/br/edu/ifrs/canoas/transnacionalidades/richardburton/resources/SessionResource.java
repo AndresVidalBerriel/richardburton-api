@@ -1,11 +1,10 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.resources;
 
 import java.util.Base64;
-import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
+import javax.persistence.NoResultException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -64,14 +63,15 @@ public class SessionResource {
         } catch (InvalidEmailFormatException e) {
 
             return Response.status(Response.Status.BAD_REQUEST).build();
+
         }
 
         if (user != null) {
 
             String issuer = uriInfo.getAbsolutePath().toString();
             String token = JWT.issueToken(email, issuer, user.isAdmin());
-
-            return Response.ok(user).header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+            user.setToken(token);
+            return Response.ok(user).build();
         }
 
         return Response.status(Response.Status.UNAUTHORIZED).build();
