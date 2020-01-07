@@ -33,11 +33,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.services.UserService;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
+import io.jsonwebtoken.Claims;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.entities.User;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.exceptions.InvalidEmailFormatException;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.resources.SessionResource;
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
-import io.jsonwebtoken.Claims;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SessionResourceTest {
@@ -56,7 +56,7 @@ public class SessionResourceTest {
     private SessionResource sessionResource = new SessionResource();
 
     @BeforeClass
-    public static void init() {
+    public static void init() throws Exception {
 
         user = new User();
         user.setEmail("email@example.com");

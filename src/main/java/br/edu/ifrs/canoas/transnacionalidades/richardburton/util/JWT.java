@@ -1,9 +1,16 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Date;
-
-import javax.crypto.spec.SecretKeySpec;
+import java.util.Properties;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -13,11 +20,45 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWT {
 
-    static private final long TOKEN_TTL_MS = 3600000;
-    static private final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
-    static private final Key KEY = new SecretKeySpec(Global.getSecret(), ALGORITHM.getJcaName());
+    private static Key secret = null;
 
-    static public String issueToken(String subject, String issuer, boolean admin) {
+    private static Key getSecret() {
+        /*
+         * if (secret == null) { try {
+         * 
+         * secret = Files.readAllBytes(Paths.get(System.getProperty("secretPath")));
+         * 
+         * } catch (IOException e) {
+         * 
+         * e.printStackTrace(); } }
+         */
+
+        if (secret == null)
+            try {
+
+                InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("app.properties");
+                Properties properties = new Properties();
+                properties.load(propertiesStream);
+                char[] ksPassword = properties.getProperty("keystorepsw").toCharArray();
+                String ksLocation = properties.getProperty("keystoreloc");
+
+                KeyStore ks = KeyStore.getInstance("PKCS12");
+                ks.load(new FileInputStream(ksLocation), ksPassword);
+                secret = ks.getKey("jwtsecretkey", ksPassword);
+
+            } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
+                    | UnrecoverableKeyException e) {
+
+                e.printStackTrace();
+            }
+
+        return secret;
+    }
+
+    private static final long TOKEN_TTL_MS = 3600000;
+    private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
+
+    public static String issueToken(String subject, String issuer, boolean admin) {
 
         JwtBuilder builder = Jwts.builder();
 
@@ -28,7 +69,7 @@ public class JWT {
         builder.setIssuer(issuer);
         builder.setIssuedAt(now);
         builder.setExpiration(exp);
-        builder.signWith(ALGORITHM, KEY);
+        builder.signWith(ALGORITHM, getSecret());
         builder.claim("admin", admin);
 
         return builder.compact();
@@ -36,7 +77,7 @@ public class JWT {
 
     public static Claims decodeToken(String token) throws JwtException {
 
-        return Jwts.parser().setSigningKey(Global.getSecret()).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(getSecret()).parseClaimsJws(token).getBody();
     }
 
 }
