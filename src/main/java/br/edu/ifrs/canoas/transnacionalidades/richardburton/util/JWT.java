@@ -39,8 +39,8 @@ public class JWT {
                 InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("app.properties");
                 Properties properties = new Properties();
                 properties.load(propertiesStream);
-                char[] ksPassword = properties.getProperty("keystorepsw").toCharArray();
-                String ksLocation = properties.getProperty("keystoreloc");
+                char[] ksPassword = System.getenv(properties.getProperty("keystorepsw")).toCharArray();
+                String ksLocation = System.getenv(properties.getProperty("keystoreloc"));
 
                 KeyStore ks = KeyStore.getInstance("PKCS12");
                 ks.load(new FileInputStream(ksLocation), ksPassword);
