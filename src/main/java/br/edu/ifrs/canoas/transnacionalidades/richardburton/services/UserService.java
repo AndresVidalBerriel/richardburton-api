@@ -54,7 +54,7 @@ public class UserService {
 
     public User retrieve(String email) throws InvalidEmailFormatException, NoResultException {
 
-        if (!Pattern.matches(User.getEmailformat(), email))
+        if (!Pattern.matches(User.EMAIL_FORMAT, email))
             throw new InvalidEmailFormatException("The provided email's format is not correct.");
 
         return userDAO.retrieve(email);

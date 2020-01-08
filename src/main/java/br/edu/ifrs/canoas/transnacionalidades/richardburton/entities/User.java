@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -18,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @JsonInclude(Include.NON_NULL)
 public class User {
 
-    private static final String emailFormat = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+    public static final String EMAIL_FORMAT = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(unique = true)
-    @Pattern(regexp = emailFormat)
+    @Email(regexp = EMAIL_FORMAT)
     private String email;
 
     @NotBlank
@@ -116,10 +117,6 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public static String getEmailformat() {
-        return emailFormat;
     }
 
     public String getToken() {
