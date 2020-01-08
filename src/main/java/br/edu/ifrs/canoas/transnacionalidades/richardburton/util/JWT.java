@@ -39,12 +39,13 @@ public class JWT {
                 InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("app.properties");
                 Properties properties = new Properties();
                 properties.load(propertiesStream);
+
                 char[] ksPassword = System.getenv(properties.getProperty("keystorepsw")).toCharArray();
                 String ksLocation = System.getenv(properties.getProperty("keystoreloc"));
-
+                String keyAlias = System.getenv(properties.getProperty("jwtkeyalias"));
                 KeyStore ks = KeyStore.getInstance("PKCS12");
                 ks.load(new FileInputStream(ksLocation), ksPassword);
-                secret = ks.getKey("jwtsecretkey", ksPassword);
+                secret = ks.getKey(keyAlias, ksPassword);
 
             } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
                     | UnrecoverableKeyException e) {
