@@ -22,7 +22,7 @@ public class UserService {
 
     public User authenticate(String email, String authenticationString) throws InvalidEmailFormatException {
 
-        if (!Pattern.matches(User.getEmailformat(), email))
+        if (!Pattern.matches(User.EMAIL_FORMAT, email))
             throw new InvalidEmailFormatException("The provided email's format is not correct.");
 
         User user = userDAO.retrieve(email);
