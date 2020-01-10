@@ -3,7 +3,6 @@ package br.edu.ifrs.canoas.richardburton.books;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,7 +28,7 @@ public abstract class Book {
     private Set<Author> authors;
 
     @NotNull
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book")
     private List<Publication> publications;
 
     public Long getId() {

@@ -14,6 +14,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import br.edu.ifrs.canoas.richardburton.books.Author;
+import br.edu.ifrs.canoas.richardburton.books.NoNewDataException;
 import br.edu.ifrs.canoas.richardburton.books.OriginalBook;
 import br.edu.ifrs.canoas.richardburton.books.Publication;
 import br.edu.ifrs.canoas.richardburton.books.TranslatedBook;
@@ -78,7 +79,14 @@ public class DataInitializer implements ServletContextListener {
 
                 original.setTranslations(Arrays.asList(translation));
 
-                translatedBookService.create(translation);
+                try {
+
+                    translatedBookService.create(translation);
+
+                } catch (NoNewDataException e) {
+
+                    e.printStackTrace();
+                }
             }
 
         } catch (IOException e) {

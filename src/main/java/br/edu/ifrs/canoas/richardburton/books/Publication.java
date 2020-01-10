@@ -2,7 +2,6 @@ package br.edu.ifrs.canoas.richardburton.books;
 
 import java.time.Year;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -22,14 +21,14 @@ import br.edu.ifrs.canoas.richardburton.util.converters.YearAttributeConverter;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "publisher", "year", "country" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "book_id", "title", "publisher", "year", "country" }))
 public class Publication {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Book book;
 
     @NullOrNotBlank
@@ -111,7 +110,6 @@ public class Publication {
         int result = 1;
         result = prime * result + ((book == null) ? 0 : book.hashCode());
         result = prime * result + ((country == null) ? 0 : country.hashCode());
-        result = prime * result + ((isbn == null) ? 0 : isbn.hashCode());
         result = prime * result + ((publisher == null) ? 0 : publisher.hashCode());
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         result = prime * result + ((year == null) ? 0 : year.hashCode());
@@ -136,11 +134,6 @@ public class Publication {
             if (other.country != null)
                 return false;
         } else if (!country.equals(other.country))
-            return false;
-        if (isbn == null) {
-            if (other.isbn != null)
-                return false;
-        } else if (!isbn.equals(other.isbn))
             return false;
         if (publisher == null) {
             if (other.publisher != null)

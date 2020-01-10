@@ -18,6 +18,9 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
     @Inject
     private AuthorDAO authorDAO;
 
+    @Inject
+    private PublicationDAO publicationDAO;
+
     @SuppressWarnings("unchecked")
     public List<E> getByTitle(String title) {
 
@@ -64,23 +67,34 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
 
         if (alreadyRegistered == null) {
 
-            Stream<Author> authorStream = book.getAuthors().stream();
-            authorStream = authorStream.map(author -> authorDAO.create(author));
-            authorStream = authorStream.peek(author -> author.addBook(book));
-            book.setAuthors(authorStream.collect(Collectors.toSet()));
+            book.getAuthors().stream().forEach(author -> author.addBook(book));
+            book.setAuthors(authorDAO.create(book.getAuthors()));
+            book.getPublications().stream().forEach(publication -> publication.setBook(book));
+            book.setPublications(publicationDAO.create(book.getPublications()));
 
             return super.create(book);
 
         } else {
 
-            List<Publication> publications = alreadyRegistered.getPublications();
+            List<Publication> registeredPublications = alreadyRegistered.getPublications();
 
             for (Publication publication : book.getPublications()) {
 
                 publication.setBook(alreadyRegistered);
-                if (!publications.contains(publication)) {
+                int index = registeredPublications.indexOf(publication);
 
-                    publications.add(publication);
+                if (index == -1) {
+
+                    registeredPublications.add(publication);
+
+                } else {
+
+                    Publication registeredPublication = registeredPublications.get(index);
+
+                    if (registeredPublication.getIsbn() == null) {
+
+                        registeredPublication.setIsbn(publication.getIsbn());
+                    }
                 }
             }
 

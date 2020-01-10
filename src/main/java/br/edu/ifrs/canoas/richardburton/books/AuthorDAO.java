@@ -1,5 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -31,6 +35,13 @@ public class AuthorDAO extends BaseDAO<Author, Long> {
 
         Author alreadyRegistered = retrieve(author.getName());
         return alreadyRegistered == null ? super.create(author) : alreadyRegistered;
+    }
+
+    public Set<Author> create(Set<Author> authors) {
+
+        Stream<Author> authorStream = authors.stream();
+        authorStream = authorStream.map(publication -> create(publication));
+        return authorStream.collect(Collectors.toSet());
     }
 
 }
