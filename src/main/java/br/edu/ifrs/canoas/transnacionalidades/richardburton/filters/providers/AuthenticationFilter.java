@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.filters;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.filters.providers;
 
 import java.lang.reflect.Method;
 
@@ -12,8 +12,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.annotations.RequiresAuthentication;
-import br.edu.ifrs.canoas.transnacionalidades.richardburton.annotations.RequiresAuthentication.Privileges;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.filters.annotations.RequiresAuthentication;
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.filters.annotations.RequiresAuthentication.Privileges;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.JWT;
 import br.edu.ifrs.canoas.transnacionalidades.richardburton.util.http.RBHttpStatus;
 import io.jsonwebtoken.Claims;

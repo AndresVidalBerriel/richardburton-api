@@ -8,12 +8,13 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import br.edu.ifrs.canoas.transnacionalidades.richardburton.constraints.annotations.NullOrNotBlank;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
@@ -43,13 +44,13 @@ public class User {
     @JsonProperty(access = Access.READ_ONLY)
     private boolean admin;
 
-    @Pattern(regexp = "\\S+")
+    @NullOrNotBlank
     private String nationality;
 
-    @Pattern(regexp = "\\S+")
+    @NullOrNotBlank
     private String affiliation;
 
-    @Pattern(regexp = "\\S+")
+    @NullOrNotBlank
     private String occupation;
 
     @Transient

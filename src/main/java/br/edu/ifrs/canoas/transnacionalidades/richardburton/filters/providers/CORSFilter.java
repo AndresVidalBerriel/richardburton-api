@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.filters;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.filters.providers;
 
 import java.io.IOException;
 

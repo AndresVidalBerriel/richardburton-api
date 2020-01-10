@@ -97,7 +97,7 @@ public class SessionResourceTest {
 
         when(userService.authenticate(eq(email), eq(authenticationString))).thenReturn(user);
         when(userService.authenticate(eq(email), not(eq(authenticationString)))).thenReturn(null);
-        when(userService.authenticate(not(matches(User.getEmailformat())), anyString()))
+        when(userService.authenticate(not(matches(User.EMAIL_FORMAT)), anyString()))
                 .thenThrow(InvalidEmailFormatException.class);
 
     }

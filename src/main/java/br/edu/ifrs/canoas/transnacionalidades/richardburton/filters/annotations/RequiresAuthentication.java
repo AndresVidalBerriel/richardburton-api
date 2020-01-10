@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.transnacionalidades.richardburton.annotations;
+package br.edu.ifrs.canoas.transnacionalidades.richardburton.filters.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

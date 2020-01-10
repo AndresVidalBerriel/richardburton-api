@@ -48,9 +48,8 @@ public abstract class BaseDAO<E, ID> implements Serializable {
         em.remove(ref);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<E> retrieveAll() {
-        @SuppressWarnings("rawtypes")
         Class entityClass = getEntityClass();
         String queryString = "Select e FROM " + entityClass.getSimpleName() + " e";
         Query query = em.createQuery(queryString, entityClass);
