@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Year;
 import java.util.Arrays;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
@@ -37,7 +38,7 @@ public class DataInitializer implements ServletContextListener {
                 String[] data = line.split("(;)(?=(?:[^\"]|\"[^\"]*\")*$)");
 
                 OriginalBook original = new OriginalBook();
-                original.setAuthors(Arrays.asList(data[0].split(" and ")));
+                original.setAuthors(new TreeSet<String>(Arrays.asList(data[0].split(" and "))));
 
                 Publication originalPublication = new Publication();
                 originalPublication.setBook(original);
@@ -47,7 +48,7 @@ public class DataInitializer implements ServletContextListener {
                 original.setPublications(Arrays.asList(originalPublication));
 
                 TranslatedBook translation = new TranslatedBook();
-                translation.setAuthors(Arrays.asList(data[5].split(" and ")));
+                translation.setAuthors(new TreeSet<String>(Arrays.asList(data[5].split(" and "))));
                 translation.setOriginal(original);
 
                 Publication translationPublication = new Publication();

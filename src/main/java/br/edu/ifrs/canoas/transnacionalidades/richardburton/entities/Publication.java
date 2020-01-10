@@ -2,7 +2,6 @@ package br.edu.ifrs.canoas.transnacionalidades.richardburton.entities;
 
 import java.time.Year;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;

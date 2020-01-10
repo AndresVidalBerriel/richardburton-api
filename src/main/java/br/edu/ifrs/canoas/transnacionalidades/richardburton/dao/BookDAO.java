@@ -23,7 +23,7 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
     public List<E> getByTitle(String title) {
 
         String titlesSubqueryString = "(SELECT publication.title FROM Publication publication WHERE publication.book = book)";
-        String booksQueryString = "SELECT book FROM OriginalBook book WHERE (:title) IN " + titlesSubqueryString;
+        String booksQueryString = "SELECT book FROM Book book WHERE (:title) IN " + titlesSubqueryString;
         Query query = em.createQuery(booksQueryString);
         query.setParameter("title", title);
 

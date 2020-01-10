@@ -1,17 +1,16 @@
 package br.edu.ifrs.canoas.transnacionalidades.richardburton.entities;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -29,8 +28,7 @@ public abstract class Book {
 
     @NotEmpty
     @ElementCollection
-    @OrderColumn
-    private List<String> authors;
+    private Set<String> authors;
 
     @NotNull
     @OneToMany(mappedBy = "book")
@@ -44,11 +42,11 @@ public abstract class Book {
         this.id = id;
     }
 
-    public List<String> getAuthors() {
+    public Set<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(TreeSet<String> authors) {
         this.authors = authors;
     }
 
