@@ -1,5 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -29,6 +31,16 @@ public class TranslatedBookService {
         }
 
         return translatedBookDAO.create(translation);
+    }
+
+    public List<TranslatedBook> retrieveAll(Long afterId, int pageSize) {
+
+        return translatedBookDAO.retrieveAll(afterId, pageSize);
+    }
+
+    public TranslatedBook retrieve(Long id) {
+
+        return translatedBookDAO.retrieve(id);
     }
 
 }

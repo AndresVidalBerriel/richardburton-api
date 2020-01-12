@@ -58,7 +58,7 @@ public class UserResource {
 
         if (user != null) {
 
-            return Response.status(Response.Status.OK).entity(user).build();
+            return Response.ok(user).build();
 
         } else {
 

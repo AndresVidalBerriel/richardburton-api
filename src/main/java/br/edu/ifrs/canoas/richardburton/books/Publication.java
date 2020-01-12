@@ -13,11 +13,14 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.edu.ifrs.canoas.richardburton.util.constraints.NullOrNotBlank;
 import br.edu.ifrs.canoas.richardburton.util.converters.YearAttributeConverter;
+import br.edu.ifrs.canoas.richardburton.util.serializers.YearSerializer;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
@@ -29,6 +32,7 @@ public class Publication {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private Book book;
 
     @NullOrNotBlank
@@ -36,6 +40,7 @@ public class Publication {
 
     @PastOrPresent
     @Convert(converter = YearAttributeConverter.class)
+    @JsonSerialize(using = YearSerializer.class)
     private Year year;
 
     @NotBlank

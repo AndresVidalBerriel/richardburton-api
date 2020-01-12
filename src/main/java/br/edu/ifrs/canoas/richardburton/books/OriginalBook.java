@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -15,6 +16,7 @@ public class OriginalBook extends Book {
 
     @NotNull
     @OneToMany(mappedBy = "original")
+    @JsonBackReference
     private List<TranslatedBook> translations;
 
     public List<TranslatedBook> getTranslations() {
