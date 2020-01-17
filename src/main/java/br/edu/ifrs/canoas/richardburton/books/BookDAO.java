@@ -1,6 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,8 +26,10 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
     @SuppressWarnings("unchecked")
     public List<E> getByTitle(String title) {
 
-        String titlesSubqueryString = "(SELECT publication.title FROM Publication publication WHERE publication.book = book)";
-        String booksQueryString = "SELECT book FROM Book book WHERE (:title) IN " + titlesSubqueryString;
+        String titlesSubqueryString =
+                "(SELECT publication.title FROM Publication publication WHERE publication.book = book)";
+        String booksQueryString =
+                "SELECT book FROM Book book WHERE (:title) IN " + titlesSubqueryString;
         Query query = em.createQuery(booksQueryString);
         query.setParameter("title", title);
 
@@ -40,7 +44,8 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
         Stream<Publication> publicationStream = book.getPublications().stream();
         Stream<String> titleStream = publicationStream.map(publication -> publication.getTitle());
         Stream<List<E>> resultStream = titleStream.map(title -> getByTitle(title));
-        List<E> coincidences = resultStream.flatMap(list -> list.stream()).collect(Collectors.toList());
+        List<E> coincidences =
+                resultStream.flatMap(list -> list.stream()).collect(Collectors.toList());
 
         E alreadyRegistered = null;
 
@@ -76,24 +81,27 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
 
         } else {
 
-            List<Publication> registeredPublications = alreadyRegistered.getPublications();
+            Set<Publication> registeredPublications = alreadyRegistered.getPublications();
+            List<Publication> publicationsList = new ArrayList<Publication>(registeredPublications);
 
             for (Publication publication : book.getPublications()) {
 
                 publication.setBook(alreadyRegistered);
-                int index = registeredPublications.indexOf(publication);
+                int index = publicationsList.indexOf(publication);
 
                 if (index == -1) {
 
                     registeredPublications.add(publication);
+                    publicationDAO.create(publication);
 
                 } else {
 
-                    Publication registeredPublication = registeredPublications.get(index);
+                    Publication registeredPublication = publicationsList.get(index);
 
                     if (registeredPublication.getIsbn() == null) {
 
                         registeredPublication.setIsbn(publication.getIsbn());
+                        publicationDAO.update(registeredPublication);
                     }
                 }
             }

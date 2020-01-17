@@ -1,6 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,7 +19,8 @@ public class PublicationDAO extends BaseDAO<Publication, Long> {
 
         try {
 
-            String queryString = "SELECT publication FROM Publication publication WHERE publication.title = :title AND publication.year = :year AND publication.country = :country AND publication.publisher = :publisher AND publication.book = :book";
+            String queryString =
+                    "SELECT publication FROM Publication publication WHERE publication.title = :title AND publication.year = :year AND publication.country = :country AND publication.publisher = :publisher AND publication.book = :book";
             TypedQuery<Publication> query = em.createQuery(queryString, Publication.class);
             query.setParameter("title", publication.getTitle());
             query.setParameter("year", publication.getYear());
@@ -34,11 +35,11 @@ public class PublicationDAO extends BaseDAO<Publication, Long> {
         }
     }
 
-    public List<Publication> create(List<Publication> publications) {
+    public Set<Publication> create(Set<Publication> publications) {
 
         Stream<Publication> publicationStream = publications.stream();
         publicationStream = publicationStream.map(publication -> create(publication));
-        return publicationStream.collect(Collectors.toList());
+        return publicationStream.collect(Collectors.toSet());
     }
 
 }

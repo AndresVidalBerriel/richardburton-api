@@ -17,35 +17,44 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.NumericField;
 import br.edu.ifrs.canoas.richardburton.util.constraints.NullOrNotBlank;
-import br.edu.ifrs.canoas.richardburton.util.converters.YearAttributeConverter;
-import br.edu.ifrs.canoas.richardburton.util.serializers.YearSerializer;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "book_id", "title", "publisher", "year", "country" }))
+@Table(uniqueConstraints = @UniqueConstraint(
+        columnNames = {"book_id", "title", "publisher", "year", "country"}))
 public class Publication {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @ContainedIn
     @ManyToOne
     @JsonBackReference
     private Book book;
 
+    @Field
     @NullOrNotBlank
     private String publisher;
 
+    @Field(analyze = Analyze.NO)
+    @FieldBridge(impl = YearFieldBridge.class)
     @PastOrPresent
     @Convert(converter = YearAttributeConverter.class)
     @JsonSerialize(using = YearSerializer.class)
     private Year year;
 
+    @Field
     @NotBlank
     private String country;
 
+    @Field
     @NotBlank
     private String title;
 
@@ -157,5 +166,12 @@ public class Publication {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Publication [country=" + country + ", id=" + id + ", isbn=" + isbn + ", publisher="
+                + publisher + ", title=" + title + ", year=" + year + "]";
+    }
+
 
 }

@@ -46,11 +46,21 @@ public class TranslatedBookResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAll(@DefaultValue("-1") @QueryParam("after-id") Long afterId,
-            @DefaultValue("15") @QueryParam("page-size") int pageSize) {
+    public Response search(@DefaultValue("-1") @QueryParam("after-id") Long afterId,
+            @DefaultValue("15") @QueryParam("page-size") int pageSize,
+            @DefaultValue("*:*") @QueryParam("search") String search,
+            @QueryParam("use-default-fields") boolean useDefaultFields) {
 
-        List<TranslatedBook> translations = translatedBookService.retrieveAll(afterId, pageSize);
-        return Response.ok(translations).build();
+        List<TranslatedBook> translations =
+                translatedBookService.search(afterId, pageSize, search, useDefaultFields);
+
+        if (translations != null) {
+
+            return Response.ok(translations).build();
+        } else {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
     }
 
     @GET

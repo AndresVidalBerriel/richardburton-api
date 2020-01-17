@@ -1,8 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import java.util.List;
 import java.util.Set;
-
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +15,11 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.NumericField;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Store;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -24,16 +28,21 @@ public abstract class Book {
 
     @Id
     @GeneratedValue
+    @Field(name = "id_num", store = Store.YES)
+    @NumericField(forField = "id_num")
+    @SortableField(forField = "id_num")
     private Long id;
 
+    @IndexedEmbedded
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Author> authors;
 
     @NotNull
+    @IndexedEmbedded
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<Publication> publications;
+    private Set<Publication> publications;
 
     public Long getId() {
         return id;
@@ -51,11 +60,22 @@ public abstract class Book {
         this.authors = authors;
     }
 
-    public List<Publication> getPublications() {
+    public Set<Publication> getPublications() {
         return publications;
     }
 
-    public void setPublications(List<Publication> publications) {
+    public void setPublications(Set<Publication> publications) {
         this.publications = publications;
     }
+
+    @Override
+    public String toString() {
+        return "Book [authors="
+                + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) + ", id="
+                + id + ",\n publications=\n"
+                + publications.stream().map(p -> p.toString()).collect(Collectors.joining("\n"))
+                + "]";
+    }
+
+
 }

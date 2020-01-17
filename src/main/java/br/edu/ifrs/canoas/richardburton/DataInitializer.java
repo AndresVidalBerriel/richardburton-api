@@ -55,7 +55,7 @@ public class DataInitializer implements ServletContextListener {
                 originalPublication.setTitle(data[3]);
                 originalPublication.setCountry("BR");
                 originalPublication.setYear(Year.of(0));
-                original.setPublications(Arrays.asList(originalPublication));
+                original.setPublications(new HashSet<>(Arrays.asList(originalPublication)));
 
                 TranslatedBook translation = new TranslatedBook();
 
@@ -75,7 +75,7 @@ public class DataInitializer implements ServletContextListener {
                 translationPublication.setCountry(data[2]);
                 translationPublication.setPublisher(data[6]);
                 translationPublication.setYear(Year.of(Integer.parseInt(data[1])));
-                translation.setPublications(Arrays.asList(translationPublication));
+                translation.setPublications(new HashSet<>(Arrays.asList(translationPublication)));
 
                 original.setTranslations(Arrays.asList(translation));
 

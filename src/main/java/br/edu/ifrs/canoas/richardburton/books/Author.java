@@ -12,7 +12,10 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
@@ -23,11 +26,13 @@ public class Author {
     private Long id;
 
     @NotBlank
+    @Field
     @Column(unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "authors")
     @JsonBackReference
+    @ContainedIn
     private List<Book> books = new ArrayList<Book>();
 
     public Long getId() {

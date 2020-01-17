@@ -13,6 +13,7 @@ public class TranslatedBookService {
 
     public TranslatedBook create(TranslatedBook translation) throws NoNewDataException {
 
+
         TranslatedBook alreadyRegistered = translatedBookDAO.retrieve(translation);
         if (alreadyRegistered != null) {
 
@@ -30,6 +31,8 @@ public class TranslatedBookService {
             }
         }
 
+
+
         return translatedBookDAO.create(translation);
     }
 
@@ -41,6 +44,12 @@ public class TranslatedBookService {
     public TranslatedBook retrieve(Long id) {
 
         return translatedBookDAO.retrieve(id);
+    }
+
+    public List<TranslatedBook> search(Long afterId, int pageSize, String search,
+            boolean useDefaultFields) {
+
+        return translatedBookDAO.search(afterId, pageSize, search, useDefaultFields);
     }
 
 }
