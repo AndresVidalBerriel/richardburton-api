@@ -18,7 +18,8 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.TokenizerDef;
 import org.hibernate.search.annotations.TokenFilterDef;
 
-@AnalyzerDef(name = "standard", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+@AnalyzerDef(name = "translationsAnalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
         filters = {@TokenFilterDef(factory = StandardFilterFactory.class),
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
                 @TokenFilterDef(factory = TrimFilterFactory.class)})
@@ -26,7 +27,7 @@ import org.hibernate.search.annotations.TokenFilterDef;
 
 @Entity
 @Indexed
-@Analyzer(definition = "standard")
+@Analyzer(definition = "translationsAnalyzer")
 @JsonInclude(Include.NON_NULL)
 public class TranslatedBook extends Book {
 

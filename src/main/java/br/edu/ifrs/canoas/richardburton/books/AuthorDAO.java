@@ -44,4 +44,14 @@ public class AuthorDAO extends BaseDAO<Author, Long> {
         return authorStream.collect(Collectors.toSet());
     }
 
+    public Set<Author> getTranslators() {
+
+        String queryString =
+                "SELECT DISTINCT author FROM Author author JOIN author.books book WHERE book.class = TranslatedBook";
+
+        TypedQuery<Author> query = em.createQuery(queryString, Author.class);
+
+        return null;
+    }
+
 }

@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -12,6 +13,11 @@ public class OriginalBookService {
     public OriginalBook create(OriginalBook original) {
 
         return originalBookDAO.create(original);
+    }
+
+    public List<OriginalBook> search(Long afterId, int pageSize, String queryString) {
+
+        return originalBookDAO.search(afterId, pageSize, queryString);
     }
 
 }
