@@ -8,9 +8,9 @@
         <properties>
             <property name="hibernate.show_sql" value="false" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57InnoDBDialect" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
             <property name="hibernate.search.default.directory_provider" value="filesystem" />
-            <property name="hibernate.search.default.indexBase" value="/opt/richardburton/lucene/indexes" />
+            <property name="hibernate.search.default.indexBase" value="/Users/andres/richardburton/lucene/indexes" />
         </properties>
 
     </persistence-unit>

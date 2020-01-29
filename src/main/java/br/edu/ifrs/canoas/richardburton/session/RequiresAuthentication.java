@@ -10,7 +10,7 @@ import javax.ws.rs.NameBinding;
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface RequiresAuthentication {
+@interface RequiresAuthentication {
 
-    public Privileges privileges() default Privileges.REGULAR;
+    Privileges privileges() default Privileges.REGULAR;
 }

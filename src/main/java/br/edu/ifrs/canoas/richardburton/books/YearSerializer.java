@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 public class YearSerializer extends JsonSerializer<Year> {
 
     @Override
-    public void serialize(Year year, JsonGenerator jsonGenerator,
-            SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(Year year, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeObject(year.getValue());
     }

@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.tests.resources;
+package br.edu.ifrs.canoas.richardburton.tests.session;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -56,7 +56,7 @@ public class SessionResourceTest {
     private SessionResource sessionResource = new SessionResource();
 
     @BeforeClass
-    public static void init() throws Exception {
+    public static void init() {
 
         user = new User();
         user.setEmail("email@example.com");
@@ -97,8 +97,7 @@ public class SessionResourceTest {
 
         when(userService.authenticate(eq(email), eq(authenticationString))).thenReturn(user);
         when(userService.authenticate(eq(email), not(eq(authenticationString)))).thenReturn(null);
-        when(userService.authenticate(not(matches(User.EMAIL_FORMAT)), anyString()))
-                .thenThrow(EmailFormatException.class);
+        when(userService.authenticate(not(matches(User.EMAIL_FORMAT)), anyString())).thenThrow(EmailFormatException.class);
 
     }
 
@@ -130,8 +129,7 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInFailTokenNotPresent()
-            throws URISyntaxException, UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
+    public void signInFailTokenNotPresent() throws URISyntaxException, UnsupportedEncodingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -173,8 +171,8 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInSuccessTokenIsValid()
-            throws URISyntaxException, UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
+    @SuppressWarnings("unchecked")
+    public void signInSuccessTokenIsValid() throws URISyntaxException, UnsupportedEncodingException, JsonProcessingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -192,8 +190,8 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInSuccesAdminClaimTrue()
-            throws URISyntaxException, JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+    @SuppressWarnings("unchecked")
+    public void signInSuccessAdminClaimTrue() throws URISyntaxException, JsonProcessingException, UnsupportedEncodingException {
 
         MockHttpRequest request = MockHttpRequest.post("session");
         MockHttpResponse response = new MockHttpResponse();
@@ -213,8 +211,8 @@ public class SessionResourceTest {
     }
 
     @Test
-    public void signInSuccesAdminClaimFalse()
-            throws URISyntaxException, JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+    @SuppressWarnings("unchecked")
+    public void signInSuccessAdminClaimFalse() throws URISyntaxException, JsonProcessingException, UnsupportedEncodingException {
 
         user.setAdmin(false);
 

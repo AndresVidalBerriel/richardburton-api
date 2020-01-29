@@ -38,7 +38,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
-        boolean unathorized = false;
+        boolean unathorized;
 
         try {
 

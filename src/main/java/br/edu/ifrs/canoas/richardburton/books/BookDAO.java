@@ -1,6 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,19 +43,16 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
             return retrieve(book.getId());
 
         Stream<Publication> publicationStream = book.getPublications().stream();
-        Stream<String> titleStream = publicationStream.map(publication -> publication.getTitle());
-        Stream<List<E>> resultStream = titleStream.map(title -> getByTitle(title));
+        Stream<String> titleStream = publicationStream.map(Publication::getTitle);
+        Stream<List<E>> resultStream = titleStream.map(this::getByTitle);
         List<E> coincidences =
-                resultStream.flatMap(list -> list.stream()).collect(Collectors.toList());
+                resultStream.flatMap(Collection::stream).collect(Collectors.toList());
 
         E alreadyRegistered = null;
 
         for (E coincidence : coincidences) {
 
             boolean sameAuthors = book.getAuthors().equals(coincidence.getAuthors());
-
-            publicationStream = book.getPublications().stream();
-            titleStream = publicationStream.map(publication -> publication.getTitle());
 
             if (sameAuthors) {
                 alreadyRegistered = coincidence;
@@ -72,9 +70,9 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
 
         if (alreadyRegistered == null) {
 
-            book.getAuthors().stream().forEach(author -> author.addBook(book));
+            book.getAuthors().forEach(author -> author.addBook(book));
             book.setAuthors(authorDAO.create(book.getAuthors()));
-            book.getPublications().stream().forEach(publication -> publication.setBook(book));
+            book.getPublications().forEach(publication -> publication.setBook(book));
             book.setPublications(publicationDAO.create(book.getPublications()));
 
             return super.create(book);
@@ -82,7 +80,7 @@ public class BookDAO<E extends Book> extends BaseDAO<E, Long> {
         } else {
 
             Set<Publication> registeredPublications = alreadyRegistered.getPublications();
-            List<Publication> publicationsList = new ArrayList<Publication>(registeredPublications);
+            List<Publication> publicationsList = new ArrayList<>(registeredPublications);
 
             for (Publication publication : book.getPublications()) {
 

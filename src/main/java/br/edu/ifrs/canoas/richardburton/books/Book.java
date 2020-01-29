@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Entity;
@@ -36,13 +37,13 @@ public abstract class Book {
     @IndexedEmbedded
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<Author> authors;
+    private Set<Author> authors = Collections.emptySet();
 
     @NotNull
     @IndexedEmbedded
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<Publication> publications;
+    private Set<Publication> publications = Collections.emptySet();
 
     public Long getId() {
         return id;
@@ -70,12 +71,9 @@ public abstract class Book {
 
     @Override
     public String toString() {
-        return "Book [authors="
-                + authors.stream().map(a -> a.getName()).collect(Collectors.joining(",")) + ", id="
-                + id + ",\n publications=\n"
-                + publications.stream().map(p -> p.toString()).collect(Collectors.joining("\n"))
+        return "Book [authors=" + authors.stream().map(Author::getName).collect(Collectors.joining(",")) + ", id=" + id
+                + ",\n publications=\n" + publications.stream().map(Publication::toString).collect(Collectors.joining("\n"))
                 + "]";
     }
-
 
 }

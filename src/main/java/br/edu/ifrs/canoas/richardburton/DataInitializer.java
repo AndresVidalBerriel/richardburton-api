@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Year;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
@@ -29,11 +31,11 @@ public class DataInitializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
-        String pathToData = "/opt/richardburton/data.csv";
-        String line = "";
+        String pathToData = "/Users/andres/richardburton/data.csv";
+        String line;
 
         try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(pathToData), "ISO-8859-1"))) {
+                new InputStreamReader(new FileInputStream(pathToData), StandardCharsets.ISO_8859_1))) {
 
             while ((line = br.readLine()) != null) {
 
@@ -41,7 +43,7 @@ public class DataInitializer implements ServletContextListener {
 
                 OriginalBook original = new OriginalBook();
 
-                HashSet<Author> originalAuthors = new HashSet<Author>();
+                HashSet<Author> originalAuthors = new HashSet<>();
                 for (String name : data[0].split(" and ")) {
 
                     Author author = new Author();
@@ -55,11 +57,11 @@ public class DataInitializer implements ServletContextListener {
                 originalPublication.setTitle(data[3]);
                 originalPublication.setCountry("BR");
                 originalPublication.setYear(Year.of(0));
-                original.setPublications(new HashSet<>(Arrays.asList(originalPublication)));
+                original.setPublications(Set.of(originalPublication));
 
                 TranslatedBook translation = new TranslatedBook();
 
-                HashSet<Author> translationAuthors = new HashSet<Author>();
+                HashSet<Author> translationAuthors = new HashSet<>();
                 for (String name : data[5].split(" and ")) {
 
                     Author author = new Author();
@@ -75,9 +77,9 @@ public class DataInitializer implements ServletContextListener {
                 translationPublication.setCountry(data[2]);
                 translationPublication.setPublisher(data[6]);
                 translationPublication.setYear(Year.of(Integer.parseInt(data[1])));
-                translation.setPublications(new HashSet<>(Arrays.asList(translationPublication)));
+                translation.setPublications(Set.of(translationPublication));
 
-                original.setTranslations(Arrays.asList(translation));
+                original.setTranslations(Collections.singletonList(translation));
 
                 try {
 

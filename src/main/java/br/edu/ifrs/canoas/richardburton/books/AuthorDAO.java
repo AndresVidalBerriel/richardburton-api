@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -7,6 +8,16 @@ import java.util.stream.Stream;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 
 import br.edu.ifrs.canoas.richardburton.util.BaseDAO;
 
@@ -40,18 +51,33 @@ public class AuthorDAO extends BaseDAO<Author, Long> {
     public Set<Author> create(Set<Author> authors) {
 
         Stream<Author> authorStream = authors.stream();
-        authorStream = authorStream.map(publication -> create(publication));
+        authorStream = authorStream.map(this::create);
         return authorStream.collect(Collectors.toSet());
     }
 
-    public Set<Author> getTranslators() {
+    @SuppressWarnings("unchecked")
+    public List<Author> search(Long afterId, int pageSize, String queryString) {
 
-        String queryString =
-                "SELECT DISTINCT author FROM Author author JOIN author.books book WHERE book.class = TranslatedBook";
+        FullTextEntityManager fem = Search.getFullTextEntityManager(em);
+        QueryBuilder qb = fem.getSearchFactory().buildQueryBuilder().forEntity(Author.class).get();
 
-        TypedQuery<Author> query = em.createQuery(queryString, Author.class);
+        try {
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser queryParser = new QueryParser("name", analyzer);
+            Query query = queryParser.parse(queryString);
+            Query filter = qb.range().onField("id_num").above(afterId).excludeLimit().createQuery();
+            Query filteredQuery = qb.bool().must(filter).must(query).createQuery();
+            FullTextQuery ftq = fem.createFullTextQuery(filteredQuery, Author.class);
 
-        return null;
+            ftq.setMaxResults(pageSize);
+            ftq.setSort(qb.sort().byField("id_num").asc().createSort());
+
+            return ftq.getResultList();
+
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+            return null;
+        }
     }
-
 }

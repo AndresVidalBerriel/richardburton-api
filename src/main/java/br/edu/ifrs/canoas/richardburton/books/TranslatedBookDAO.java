@@ -40,10 +40,7 @@ public class TranslatedBookDAO extends BookDAO<TranslatedBook> {
         query.setParameter("afterId", afterId);
         query.setMaxResults(pageSize);
 
-
-        List<TranslatedBook> translations = query.getResultList();
-        return translations;
-
+        return query.getResultList();
     }
 
     @SuppressWarnings("unchecked")

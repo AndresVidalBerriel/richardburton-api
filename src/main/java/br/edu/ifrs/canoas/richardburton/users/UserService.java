@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.NotNull;
 
 import br.edu.ifrs.canoas.richardburton.util.Strings;
 
@@ -28,7 +29,7 @@ public class UserService {
         return authentic ? user : null;
     }
 
-    public User create(User user) throws ConstraintViolationException, EmailNotUniqueException {
+    public User create(@NotNull User user) throws ConstraintViolationException, EmailNotUniqueException {
 
         if (userDAO.retrieve(user.getEmail()) != null) {
 

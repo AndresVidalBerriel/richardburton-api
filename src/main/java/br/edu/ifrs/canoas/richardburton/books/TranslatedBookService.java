@@ -13,7 +13,6 @@ public class TranslatedBookService {
 
     public TranslatedBook create(TranslatedBook translation) throws NoNewDataException {
 
-
         TranslatedBook alreadyRegistered = translatedBookDAO.retrieve(translation);
         if (alreadyRegistered != null) {
 

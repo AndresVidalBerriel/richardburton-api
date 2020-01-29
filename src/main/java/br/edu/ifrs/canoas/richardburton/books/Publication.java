@@ -26,8 +26,7 @@ import br.edu.ifrs.canoas.richardburton.util.constraints.NullOrNotBlank;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
-@Table(uniqueConstraints = @UniqueConstraint(
-        columnNames = {"book_id", "title", "publisher", "year", "country"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "title", "publisher", "year", "country"}))
 public class Publication {
 
     @Id
@@ -160,11 +159,8 @@ public class Publication {
         } else if (!title.equals(other.title))
             return false;
         if (year == null) {
-            if (other.year != null)
-                return false;
-        } else if (!year.equals(other.year))
-            return false;
-        return true;
+            return other.year == null;
+        } else return year.equals(other.year);
     }
 
     @Override

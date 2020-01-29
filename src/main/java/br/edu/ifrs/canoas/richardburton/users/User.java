@@ -1,10 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,6 +23,7 @@ public class User {
     private Long id;
 
     @Column(unique = true)
+    @NotNull
     @Email(regexp = EMAIL_FORMAT)
     private String email;
 

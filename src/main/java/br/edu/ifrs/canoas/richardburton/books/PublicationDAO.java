@@ -38,7 +38,7 @@ public class PublicationDAO extends BaseDAO<Publication, Long> {
     public Set<Publication> create(Set<Publication> publications) {
 
         Stream<Publication> publicationStream = publications.stream();
-        publicationStream = publicationStream.map(publication -> create(publication));
+        publicationStream = publicationStream.map(this::create);
         return publicationStream.collect(Collectors.toSet());
     }
 

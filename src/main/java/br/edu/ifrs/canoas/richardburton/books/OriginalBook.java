@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
@@ -20,12 +20,9 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 
-@AnalyzerDef(name = "originalsAnalyzer",
-        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-        filters = {@TokenFilterDef(factory = StandardFilterFactory.class),
-                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-                @TokenFilterDef(factory = TrimFilterFactory.class)})
-
+@AnalyzerDef(name = "originalsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
+        @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+        @TokenFilterDef(factory = TrimFilterFactory.class) })
 
 @Entity
 @Indexed
@@ -36,7 +33,7 @@ public class OriginalBook extends Book {
     @NotNull
     @OneToMany(mappedBy = "original")
     @ContainedIn
-    @JsonBackReference
+    @JsonIgnore
     private List<TranslatedBook> translations;
 
     public List<TranslatedBook> getTranslations() {

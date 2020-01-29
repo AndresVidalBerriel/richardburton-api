@@ -29,11 +29,13 @@ public class JWT {
 
                 InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("app.properties");
                 Properties properties = new Properties();
+
+                assert propertiesStream != null;
                 properties.load(propertiesStream);
 
-                char[] ksPassword = System.getenv(properties.getProperty("keystorepsw")).toCharArray();
-                String ksLocation = System.getenv(properties.getProperty("keystoreloc"));
-                String keyAlias = System.getenv(properties.getProperty("jwtkeyalias"));
+                char[] ksPassword = properties.getProperty("keystorepsw").toCharArray();
+                String ksLocation = properties.getProperty("keystoreloc");
+                String keyAlias = properties.getProperty("jwtkeyalias");
                 KeyStore ks = KeyStore.getInstance("PKCS12");
                 ks.load(new FileInputStream(ksLocation), ksPassword);
                 secret = ks.getKey(keyAlias, ksPassword);
