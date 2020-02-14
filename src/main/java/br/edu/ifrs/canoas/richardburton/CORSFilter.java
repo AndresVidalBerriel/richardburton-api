@@ -1,6 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.util;
-
-import java.io.IOException;
+package br.edu.ifrs.canoas.richardburton;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;

@@ -1,9 +1,10 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import java.time.Year;
 import org.apache.lucene.document.Document;
 import org.hibernate.search.bridge.FieldBridge;
 import org.hibernate.search.bridge.LuceneOptions;
+
+import java.time.Year;
 
 public class YearFieldBridge implements FieldBridge {
 

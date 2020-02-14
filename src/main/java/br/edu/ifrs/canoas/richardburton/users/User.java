@@ -1,16 +1,15 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
+import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
-import br.edu.ifrs.canoas.richardburton.util.constraints.NullOrNotBlank;
 
 @Entity
 @JsonInclude(Include.NON_NULL)

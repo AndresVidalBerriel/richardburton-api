@@ -1,19 +1,14 @@
-package br.edu.ifrs.canoas.richardburton.util;
-
-import java.io.Serializable;
+package br.edu.ifrs.canoas.richardburton;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Stateless
-public abstract class BaseDAO<E, ID> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
 
     @PersistenceContext
     protected EntityManager em;
@@ -25,7 +20,7 @@ public abstract class BaseDAO<E, ID> implements Serializable {
     public Class getEntityClass() {
         return entity != null ? entity
                 : (entity = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
-                        .getActualTypeArguments()[0]);
+                .getActualTypeArguments()[0]);
     }
 
     public E create(E e) {

@@ -1,62 +1,21 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import javax.ejb.Local;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
-import br.edu.ifrs.canoas.richardburton.util.Strings;
+@Local
+public interface UserService {
 
-@Stateless
-public class UserService {
+    User authenticate(String email, String authenticationString) throws EmailFormatException;
 
-    @Inject
-    private UserDAO userDAO;
+    User create(@NotNull User user) throws ConstraintViolationException, EmailNotUniqueException;
 
-    public User authenticate(String email, String authenticationString) throws EmailFormatException {
+    List<User> retrieveAll();
 
-        if (!Pattern.matches(User.EMAIL_FORMAT, email)) {
+    User retrieve(Long id);
 
-            throw new EmailFormatException("The provided email's format is not correct.");
-        }
-
-        User user = userDAO.retrieve(email);
-        boolean authentic = user != null && user.getAuthenticationString().equals(Strings.digest(authenticationString));
-        return authentic ? user : null;
-    }
-
-    public User create(@NotNull User user) throws ConstraintViolationException, EmailNotUniqueException {
-
-        if (userDAO.retrieve(user.getEmail()) != null) {
-
-            throw new EmailNotUniqueException("An user with the provided email address has already been registered");
-        }
-
-        user.setAuthenticationString(Strings.digest(user.getAuthenticationString()));
-        return userDAO.create(user);
-    }
-
-    public List<User> retrieveAll() {
-
-        return userDAO.retrieveAll();
-    }
-
-    public User retrieve(Long id) {
-
-        return userDAO.retrieve(id);
-    }
-
-    public User retrieve(String email) throws EmailFormatException, NoResultException {
-
-        if (!Pattern.matches(User.EMAIL_FORMAT, email)) {
-
-            throw new EmailFormatException("The provided email's format is not correct.");
-        }
-
-        return userDAO.retrieve(email);
-    }
+    User retrieve(String email) throws EmailFormatException, NoResultException;
 }

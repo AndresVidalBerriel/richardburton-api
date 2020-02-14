@@ -1,6 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
-import java.lang.reflect.Method;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -11,9 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
+import java.lang.reflect.Method;
 
 @Provider
 @RequiresAuthentication
@@ -38,7 +37,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
-        boolean unathorized;
+        boolean unauthorized;
 
         try {
 
@@ -50,14 +49,14 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             boolean adminPrivilegesRequired = privileges == Privileges.ADMINISTRATOR;
             boolean userIsAdmin = Boolean.parseBoolean((String) claims.get("admin"));
 
-            unathorized = adminPrivilegesRequired && !userIsAdmin;
+            unauthorized = adminPrivilegesRequired && !userIsAdmin;
 
         } catch (JwtException e) {
 
-            unathorized = true;
+            unauthorized = true;
         }
 
-        if (unathorized) {
+        if (unauthorized) {
 
             requestContext.abortWith(response);
         }

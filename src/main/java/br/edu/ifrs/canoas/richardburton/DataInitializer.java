@@ -1,5 +1,11 @@
 package br.edu.ifrs.canoas.richardburton;
 
+import br.edu.ifrs.canoas.richardburton.books.*;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,18 +15,6 @@ import java.time.Year;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
-
-import br.edu.ifrs.canoas.richardburton.books.Author;
-import br.edu.ifrs.canoas.richardburton.books.NoNewDataException;
-import br.edu.ifrs.canoas.richardburton.books.OriginalBook;
-import br.edu.ifrs.canoas.richardburton.books.Publication;
-import br.edu.ifrs.canoas.richardburton.books.TranslatedBook;
-import br.edu.ifrs.canoas.richardburton.books.TranslatedBookService;
 
 @WebListener
 public class DataInitializer implements ServletContextListener {

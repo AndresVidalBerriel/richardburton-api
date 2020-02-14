@@ -1,9 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.util;
 
+import org.jboss.resteasy.util.Hex;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.jboss.resteasy.util.Hex;
 
 public class Strings {
 

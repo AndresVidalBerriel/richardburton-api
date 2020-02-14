@@ -1,18 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import java.time.Year;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-
+import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,8 +9,11 @@ import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.NumericField;
-import br.edu.ifrs.canoas.richardburton.util.constraints.NullOrNotBlank;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import java.time.Year;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
@@ -160,14 +151,14 @@ public class Publication {
             return false;
         if (year == null) {
             return other.year == null;
-        } else return year.equals(other.year);
+        } else
+            return year.equals(other.year);
     }
 
     @Override
     public String toString() {
-        return "Publication [country=" + country + ", id=" + id + ", isbn=" + isbn + ", publisher="
-                + publisher + ", title=" + title + ", year=" + year + "]";
+        return "Publication [country=" + country + ", id=" + id + ", isbn=" + isbn + ", publisher=" + publisher
+                + ", title=" + title + ", year=" + year + "]";
     }
-
 
 }

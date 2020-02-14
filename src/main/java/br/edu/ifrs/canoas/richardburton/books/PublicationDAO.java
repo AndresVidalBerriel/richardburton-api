@@ -1,45 +1,14 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import br.edu.ifrs.canoas.richardburton.DAO;
+
+import javax.ejb.Local;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.ejb.Stateless;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+@Local
+public interface PublicationDAO extends DAO<Publication, Long> {
 
-import br.edu.ifrs.canoas.richardburton.util.BaseDAO;
+    Publication retrieve(Publication publication);
 
-@Stateless
-public class PublicationDAO extends BaseDAO<Publication, Long> {
-
-    private static final long serialVersionUID = 1L;
-
-    public Publication retrieve(Publication publication) {
-
-        try {
-
-            String queryString =
-                    "SELECT publication FROM Publication publication WHERE publication.title = :title AND publication.year = :year AND publication.country = :country AND publication.publisher = :publisher AND publication.book = :book";
-            TypedQuery<Publication> query = em.createQuery(queryString, Publication.class);
-            query.setParameter("title", publication.getTitle());
-            query.setParameter("year", publication.getYear());
-            query.setParameter("country", publication.getCountry());
-            query.setParameter("publisher", publication.getPublisher());
-            query.setParameter("book", publication.getBook());
-            return query.getSingleResult();
-
-        } catch (NoResultException e) {
-
-            return null;
-        }
-    }
-
-    public Set<Publication> create(Set<Publication> publications) {
-
-        Stream<Publication> publicationStream = publications.stream();
-        publicationStream = publicationStream.map(this::create);
-        return publicationStream.collect(Collectors.toSet());
-    }
-
+    Set<Publication> create(Set<Publication> publications);
 }

@@ -1,9 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import org.apache.commons.validator.routines.ISBNValidator;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import org.apache.commons.validator.routines.ISBNValidator;
 
 public class ISBNConstraintValidator implements ConstraintValidator<ISBN, String> {
 

@@ -5,14 +5,13 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Stateless
-public class AuthorService {
+public class AuthorResourceImpl implements AuthorResource {
 
     @Inject
-    private AuthorDAO authorDAO;
+    private AuthorService authorService;
 
     public List<Author> search(Long afterId, int pageSize, String queryString) {
 
-        return authorDAO.search(afterId, pageSize, queryString);
+        return authorService.search(afterId, pageSize, queryString);
     }
-
 }

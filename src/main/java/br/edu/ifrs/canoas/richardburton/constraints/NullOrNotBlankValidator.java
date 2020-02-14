@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.util.constraints;
+package br.edu.ifrs.canoas.richardburton.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
