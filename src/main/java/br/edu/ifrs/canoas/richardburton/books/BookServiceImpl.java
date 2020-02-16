@@ -92,17 +92,6 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
                     registeredPublications.add(publication);
                     newData = true;
 
-                } else {
-
-                    Publication registeredPublication = registeredPublications.get(index);
-
-                    // If the publication is registered, but the new one has ISBN, add it to the existing one
-
-                    if (registeredPublication.getIsbn() == null && publication.getIsbn() != null) {
-
-                        registeredPublication.setIsbn(publication.getIsbn());
-                        newData = true;
-                    }
                 }
             }
 
