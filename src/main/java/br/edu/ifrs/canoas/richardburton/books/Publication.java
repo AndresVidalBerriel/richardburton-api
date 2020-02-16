@@ -111,6 +111,58 @@ public class Publication {
         this.isbn = isbn;
     }
 
+    public boolean matches(Publication other) {
+
+        return country.equals(other.country) && title.equals(other.title) && year.equals(other.year);
+    }
+
+    public boolean merge(Publication other) {
+
+        // Publications should just be merged if they match
+
+        if(this.matches(other)) {
+
+            // Check if there is no ISBN information to avoid inconsistencies
+
+            if(isbn == null) {
+
+                if (!this.equals(other)) {
+
+                    // If the publications are not equal, check that the current one's publisher is missing.
+
+                    if (this.publisher == null && other.publisher != null) {
+
+                        // As the two publications identities only differ in the publisher,
+                        // they should be merged.
+
+                        this.publisher = other.publisher;
+
+                    } else if (other.publisher != null) {
+
+                        // If the current one publisher is not missing, but the other one
+                        // contains a different publisher (as it's not null and 'this' and 'other' are not equal)
+                        // merge must be aborted
+
+                        return false;
+                    }
+                }
+
+                // If merged was not aborted until this point, it's safe to add the other publication's
+                // isbn information to this entity, as they may be the same.
+
+                if (other.isbn != null) {
+
+                    this.isbn = other.isbn;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     @Override
     public int hashCode() {
         final int prime = 31;

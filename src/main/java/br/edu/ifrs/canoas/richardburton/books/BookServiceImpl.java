@@ -83,15 +83,18 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
 
             for (Publication publication : book.getPublications()) {
 
-                int index = registeredPublications.indexOf(publication);
+                boolean merged = false;
 
-                if (index == -1) {
+                for(Publication registeredPublication : registeredPublications) {
 
-                    // If the publication is not registered, mark it to be registered
+                    merged = registeredPublication.merge(publication);
+                    if(merged ) break;
+                }
+
+                if (!merged) {
 
                     registeredPublications.add(publication);
                     newData = true;
-
                 }
             }
 
