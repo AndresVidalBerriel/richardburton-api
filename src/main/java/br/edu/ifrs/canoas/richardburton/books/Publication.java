@@ -120,11 +120,11 @@ public class Publication {
 
         // Publications should just be merged if they match
 
-        if(this.matches(other)) {
+        if (this.matches(other)) {
 
             // Check if there is no ISBN information to avoid inconsistencies
 
-            if(isbn == null) {
+            if (isbn == null) {
 
                 if (!this.equals(other)) {
 

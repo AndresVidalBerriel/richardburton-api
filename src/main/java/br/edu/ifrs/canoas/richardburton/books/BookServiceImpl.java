@@ -70,7 +70,7 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
 
             // Validate and attach publications to the already registered book
 
-            for(Publication publication : book.getPublications()) {
+            for (Publication publication : book.getPublications()) {
 
                 publicationService.validate(publication);
                 publication.setBook(registered);
@@ -85,10 +85,10 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
 
                 boolean merged = false;
 
-                for(Publication registeredPublication : registeredPublications) {
+                for (Publication registeredPublication : registeredPublications) {
 
                     merged = registeredPublication.merge(publication);
-                    if(merged ) break;
+                    if (merged) break;
                 }
 
                 if (!merged) {

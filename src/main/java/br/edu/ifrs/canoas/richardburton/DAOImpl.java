@@ -1,6 +1,5 @@
 package br.edu.ifrs.canoas.richardburton;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;

@@ -11,7 +11,6 @@ import org.hibernate.search.annotations.*;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @AnalyzerDef(name = "originalsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {

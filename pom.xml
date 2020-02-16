@@ -266,7 +266,10 @@
                     <password>admin@richardburton</password>
 
                     <commands>
-                        <command>/subsystem=logging/file-handler=debug:add(level=DEBUG,autoflush=true,file={"relative-to"=>"jboss.server.log.dir", "path"=>"debug.log"})</command>
+                        <command>
+                            /subsystem=logging/file-handler=debug:add(level=DEBUG,autoflush=true,file={"relative-to"=>"jboss.server.log.dir",
+                            "path"=>"debug.log"})
+                        </command>
                         <command>/subsystem=logging/logger=org.jboss.as:add(level=DEBUG,handlers=[debug])</command>
                     </commands>
 

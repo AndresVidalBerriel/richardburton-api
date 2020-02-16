@@ -1,7 +1,6 @@
 package br.edu.ifrs.canoas.richardburton;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
