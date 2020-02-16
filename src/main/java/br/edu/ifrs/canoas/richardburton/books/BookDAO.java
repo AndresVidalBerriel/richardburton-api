@@ -8,9 +8,7 @@ import java.util.List;
 @Local
 public interface BookDAO<E extends Book> extends DAO<E, Long> {
 
-    E retrieve(E book);
-
-    List<E> getByTitle(String title);
+    List<E> retrieve(String title);
 
     List<E> search(
             Long afterId,

@@ -1,10 +1,10 @@
 package br.edu.ifrs.canoas.richardburton;
 
-import javax.ejb.Stateless;
+import javax.ejb.Local;
 import java.io.Serializable;
 import java.util.List;
 
-@Stateless
+@Local
 public interface DAO<E, ID> extends Serializable {
 
     E create(E e);
@@ -15,5 +15,7 @@ public interface DAO<E, ID> extends Serializable {
 
     void delete(ID id);
 
-    List<E> retrieveAll();
+    List<E> retrieve();
+
+    List<E> retrieve(ID afterId, int pageSize);
 }

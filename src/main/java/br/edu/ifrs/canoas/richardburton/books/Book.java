@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
+import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,16 +23,17 @@ public abstract class Book {
     @SortableField(forField = "id_num")
     private Long id;
 
+    @NotEmpty
     @IndexedEmbedded
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private Set<Author> authors = Collections.emptySet();
+    private Set<Author> authors = new HashSet<>();
 
-    @NotNull
+    @NotEmpty
     @IndexedEmbedded
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<Publication> publications = Collections.emptySet();
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    private Set<Publication> publications = new HashSet<>();
 
     public Long getId() {
         return id;

@@ -8,6 +8,6 @@ public interface TranslatedBookDAO extends BookDAO<TranslatedBook> {
 
     TranslatedBook create(TranslatedBook translation);
 
-    List<TranslatedBook> retrieveAll(Long afterId, int pageSize);
+    List<TranslatedBook> retrieve(Long afterId, int pageSize);
 
 }

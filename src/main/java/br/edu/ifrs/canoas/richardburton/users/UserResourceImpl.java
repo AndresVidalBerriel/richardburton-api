@@ -31,9 +31,9 @@ public class UserResourceImpl implements UserResource {
         }
     }
 
-    public Response retrieveAll() {
+    public Response retrieve() {
 
-        List<User> users = userService.retrieveAll();
+        List<User> users = userService.retrieve();
         return Response.status(Response.Status.OK).entity(users).build();
     }
 

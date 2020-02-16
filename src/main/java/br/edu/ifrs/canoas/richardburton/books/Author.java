@@ -16,7 +16,7 @@ import java.util.List;
 
 @AnalyzerDef(name = "authorsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
         @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-        @TokenFilterDef(factory = TrimFilterFactory.class) })
+        @TokenFilterDef(factory = TrimFilterFactory.class)})
 
 @Entity
 @Indexed
@@ -36,7 +36,7 @@ public class Author {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     @JsonBackReference
     @ContainedIn
     private List<Book> books = new ArrayList<>();

@@ -4,6 +4,4 @@ import javax.ejb.Local;
 
 @Local
 public interface OriginalBookService extends BookService<OriginalBook> {
-
-    OriginalBook create(OriginalBook original);
 }

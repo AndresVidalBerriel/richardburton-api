@@ -16,7 +16,7 @@ import java.util.List;
 
 @AnalyzerDef(name = "originalsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
         @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-        @TokenFilterDef(factory = TrimFilterFactory.class) })
+        @TokenFilterDef(factory = TrimFilterFactory.class)})
 
 @Entity
 @Indexed
@@ -24,10 +24,9 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 public class OriginalBook extends Book {
 
-    @NotNull
-    @OneToMany(mappedBy = "original")
     @ContainedIn
     @JsonIgnore
+    @OneToMany(mappedBy = "original")
     private List<TranslatedBook> translations;
 
     public List<TranslatedBook> getTranslations() {

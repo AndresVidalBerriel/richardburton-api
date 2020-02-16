@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @AnalyzerDef(name = "translationsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
         @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-        @TokenFilterDef(factory = TrimFilterFactory.class) })
+        @TokenFilterDef(factory = TrimFilterFactory.class)})
 
 @Entity
 @Indexed

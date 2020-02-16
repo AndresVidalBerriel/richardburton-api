@@ -12,6 +12,8 @@ import java.util.Properties;
 
 public class JWT {
 
+    private static final long TOKEN_TTL_MS = 3600000;
+    private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
     private static Key secret = null;
 
     private static Key getSecret() {
@@ -40,9 +42,6 @@ public class JWT {
 
         return secret;
     }
-
-    private static final long TOKEN_TTL_MS = 3600000;
-    private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
 
     public static String issueToken(String subject, String issuer, boolean admin) {
 

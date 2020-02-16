@@ -4,7 +4,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-@Target({ ElementType.FIELD })
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NullOrNotBlankValidator.class)
 @Documented
@@ -16,7 +16,7 @@ public @interface NullOrNotBlank {
 
     Class<? extends Payload>[] payload() default {};
 
-    @Target({ ElementType.FIELD })
+    @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
     @interface List {

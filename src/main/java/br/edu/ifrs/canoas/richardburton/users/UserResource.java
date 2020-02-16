@@ -14,7 +14,7 @@ public interface UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response retrieveAll();
+    Response retrieve();
 
     @GET
     @Path("/{id}")

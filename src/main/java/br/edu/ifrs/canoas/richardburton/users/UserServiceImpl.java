@@ -15,18 +15,15 @@ public class UserServiceImpl implements UserService {
     @Inject
     private UserDAO userDAO;
 
+    @Override
     public User authenticate(String email, String authenticationString) throws EmailFormatException {
 
-        if (!Pattern.matches(User.EMAIL_FORMAT, email)) {
-
-            throw new EmailFormatException("The provided email's format is not correct.");
-        }
-
-        User user = userDAO.retrieve(email);
+        User user = retrieve(email);
         boolean authentic = user != null && user.getAuthenticationString().equals(Strings.digest(authenticationString));
         return authentic ? user : null;
     }
 
+    @Override
     public User create(User user) throws ConstraintViolationException, EmailNotUniqueException {
 
         if (userDAO.retrieve(user.getEmail()) != null) {
@@ -38,16 +35,19 @@ public class UserServiceImpl implements UserService {
         return userDAO.create(user);
     }
 
-    public List<User> retrieveAll() {
+    @Override
+    public List<User> retrieve() {
 
-        return userDAO.retrieveAll();
+        return userDAO.retrieve();
     }
 
+    @Override
     public User retrieve(Long id) {
 
         return userDAO.retrieve(id);
     }
 
+    @Override
     public User retrieve(String email) throws EmailFormatException, NoResultException {
 
         if (!Pattern.matches(User.EMAIL_FORMAT, email)) {

@@ -13,7 +13,7 @@ public interface UserService {
 
     User create(@NotNull User user) throws ConstraintViolationException, EmailNotUniqueException;
 
-    List<User> retrieveAll();
+    List<User> retrieve();
 
     User retrieve(Long id);
 

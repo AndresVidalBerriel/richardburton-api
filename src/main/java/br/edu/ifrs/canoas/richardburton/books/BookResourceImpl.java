@@ -7,6 +7,7 @@ public abstract class BookResourceImpl<E extends Book> implements BookResource<E
 
     protected abstract BookService<E> getService();
 
+    @Override
     public Response search(Long afterId, int pageSize, String search, boolean useDefaultFields) {
 
         List<E> books = getService().search(afterId, pageSize, search, useDefaultFields);

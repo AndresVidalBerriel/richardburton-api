@@ -14,14 +14,10 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@Stateless
 public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> implements BookDAO<E> {
 
     @Inject
@@ -30,8 +26,9 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
     @Inject
     private PublicationDAO publicationDAO;
 
+    @Override
     @SuppressWarnings("unchecked")
-    public List<E> getByTitle(String title) {
+    public List<E> retrieve(String title) {
 
         String titlesSubqueryString = "(SELECT publication.title FROM Publication publication WHERE publication.book = book)";
         String booksQueryString = "SELECT book FROM Book book WHERE (:title) IN " + titlesSubqueryString;
@@ -41,77 +38,46 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
         return (List<E>) query.getResultList();
     }
 
-    public E retrieve(E book) {
-
-        if (book.getId() != null)
-            return retrieve(book.getId());
-
-        Stream<Publication> publicationStream = book.getPublications().stream();
-        Stream<String> titleStream = publicationStream.map(Publication::getTitle);
-        Stream<List<E>> resultStream = titleStream.map(this::getByTitle);
-        List<E> coincidences =
-                resultStream.flatMap(Collection::stream).collect(Collectors.toList());
-
-        E alreadyRegistered = null;
-
-        for (E coincidence : coincidences) {
-
-            boolean sameAuthors = book.getAuthors().equals(coincidence.getAuthors());
-
-            if (sameAuthors) {
-                alreadyRegistered = coincidence;
-                break;
-            }
-        }
-
-        return alreadyRegistered;
-    }
-
     @Override
     public E create(E book) {
 
-        E alreadyRegistered = retrieve(book);
+        em.persist(book);
 
-        if (alreadyRegistered == null) {
+        for (Publication publication : book.getPublications()) {
 
-            book.getAuthors().forEach(author -> author.addBook(book));
-            book.setAuthors(authorDAO.create(book.getAuthors()));
-            book.getPublications().forEach(publication -> publication.setBook(book));
-            book.setPublications(publicationDAO.create(book.getPublications()));
-
-            return super.create(book);
-
-        } else {
-
-            Set<Publication> registeredPublications = alreadyRegistered.getPublications();
-            List<Publication> publicationsList = new ArrayList<>(registeredPublications);
-
-            for (Publication publication : book.getPublications()) {
-
-                publication.setBook(alreadyRegistered);
-                int index = publicationsList.indexOf(publication);
-
-                if (index == -1) {
-
-                    registeredPublications.add(publication);
-                    publicationDAO.create(publication);
-
-                } else {
-
-                    Publication registeredPublication = publicationsList.get(index);
-
-                    if (registeredPublication.getIsbn() == null) {
-
-                        registeredPublication.setIsbn(publication.getIsbn());
-                        publicationDAO.update(registeredPublication);
-                    }
-                }
-            }
-
-            return update(alreadyRegistered);
+            publication.setBook(book);
+            em.persist(publication);
         }
+
+        return book;
     }
 
+    @Override
+    public E update(E book) {
+
+        Set<Publication> publications = new HashSet<>();
+
+        for (Publication publication : book.getPublications()) {
+
+            publication.setBook(book);
+
+            if (publication.getId() != null) {
+
+                publication = em.merge(publication);
+
+            } else {
+
+                em.persist(publication);
+            }
+
+            publications.add(publication);
+        }
+        book.setPublications(publications);
+
+        return  em.merge(book);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<E> search(Long afterId, int pageSize, String queryString, String[] onFields) {
 

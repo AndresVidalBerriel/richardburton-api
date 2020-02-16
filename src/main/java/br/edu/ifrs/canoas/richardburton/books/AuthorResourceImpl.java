@@ -10,6 +10,7 @@ public class AuthorResourceImpl implements AuthorResource {
     @Inject
     private AuthorService authorService;
 
+    @Override
     public List<Author> search(Long afterId, int pageSize, String queryString) {
 
         return authorService.search(afterId, pageSize, queryString);

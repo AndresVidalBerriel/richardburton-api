@@ -12,6 +12,7 @@ import org.hibernate.search.annotations.FieldBridge;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.Year;
 
@@ -24,6 +25,7 @@ public class Publication {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     @ContainedIn
     @ManyToOne
     @JsonBackReference
@@ -33,6 +35,7 @@ public class Publication {
     @NullOrNotBlank
     private String publisher;
 
+    @NotNull
     @Field(analyze = Analyze.NO)
     @FieldBridge(impl = YearFieldBridge.class)
     @PastOrPresent

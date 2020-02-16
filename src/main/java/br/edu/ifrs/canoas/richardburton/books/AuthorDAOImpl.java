@@ -15,9 +15,6 @@ import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Stateless
 public class AuthorDAOImpl extends DAOImpl<Author, Long> implements AuthorDAO {
@@ -40,19 +37,6 @@ public class AuthorDAOImpl extends DAOImpl<Author, Long> implements AuthorDAO {
     }
 
     @Override
-    public Author create(Author author) {
-
-        Author alreadyRegistered = retrieve(author.getName());
-        return alreadyRegistered == null ? super.create(author) : alreadyRegistered;
-    }
-
-    public Set<Author> create(Set<Author> authors) {
-
-        Stream<Author> authorStream = authors.stream();
-        authorStream = authorStream.map(this::create);
-        return authorStream.collect(Collectors.toSet());
-    }
-
     @SuppressWarnings("unchecked")
     public List<Author> search(Long afterId, int pageSize, String queryString) {
 

@@ -1,6 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-public class NoNewDataException extends Exception {
+import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
+
+public class NoNewDataException extends DuplicateEntityException {
 
     private static final long serialVersionUID = 1L;
 
