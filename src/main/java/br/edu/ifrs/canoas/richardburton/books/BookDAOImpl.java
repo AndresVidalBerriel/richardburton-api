@@ -102,7 +102,7 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
             org.apache.lucene.search.Query query = queryParser.parse(queryString);
             org.apache.lucene.search.Query filter = qb.range().onField("id_num").above(afterId).excludeLimit().createQuery();
             org.apache.lucene.search.Query filteredQuery = qb.bool().must(filter).must(query).createQuery();
-            FullTextQuery ftq = fem.createFullTextQuery(filteredQuery, TranslatedBook.class);
+            FullTextQuery ftq = fem.createFullTextQuery(filteredQuery, getEntityClass());
 
             ftq.setMaxResults(pageSize);
             ftq.setSort(qb.sort().byField("id_num").asc().createSort());
