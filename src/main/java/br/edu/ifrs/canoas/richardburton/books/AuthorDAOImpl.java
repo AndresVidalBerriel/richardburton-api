@@ -19,8 +19,7 @@ import java.util.List;
 @Stateless
 public class AuthorDAOImpl extends DAOImpl<Author, Long> implements AuthorDAO {
 
-    private static final long serialVersionUID = 1L;
-
+    @Override
     public Author retrieve(String name) {
 
         try {

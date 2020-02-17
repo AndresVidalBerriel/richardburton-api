@@ -20,9 +20,6 @@ import java.util.Set;
 public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> implements BookDAO<E> {
 
     @Inject
-    private AuthorDAO authorDAO;
-
-    @Inject
     private PublicationDAO publicationDAO;
 
     @Override
@@ -45,7 +42,7 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
         for (Publication publication : book.getPublications()) {
 
             publication.setBook(book);
-            em.persist(publication);
+            publicationDAO.create(publication);
         }
 
         return book;
@@ -62,11 +59,11 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
 
             if (publication.getId() != null) {
 
-                publication = em.merge(publication);
+                publication = publicationDAO.update(publication);
 
             } else {
 
-                em.persist(publication);
+                publicationDAO.create(publication);
             }
 
             publications.add(publication);

@@ -9,14 +9,6 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class PublicationDAOImpl extends DAOImpl<Publication, Long> implements PublicationDAO {
 
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    public Publication create(Publication publication) {
-        publication.setBook(em.merge(publication.getBook()));
-        return super.create(publication);
-    }
-
     @Override
     public Publication retrieve(Publication publication) {
 
