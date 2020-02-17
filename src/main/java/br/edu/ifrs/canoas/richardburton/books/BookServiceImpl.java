@@ -50,6 +50,7 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
             Set<Author> authors = new HashSet<>();
             for (Author author : book.getAuthors()) {
 
+                author.addBook(book);
                 author = authorService.create(author);
                 authors.add(author);
             }
