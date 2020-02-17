@@ -10,6 +10,15 @@ import javax.persistence.TypedQuery;
 public class PublicationDAOImpl extends DAOImpl<Publication, Long> implements PublicationDAO {
 
     @Override
+    public Publication create(Publication publication) {
+
+        Book book = publication.getBook();
+        book = em.getReference(Book.class, book.getId());
+        publication.setBook(book);
+        return super.create(publication);
+    }
+
+    @Override
     public Publication retrieve(Publication publication) {
 
         try {

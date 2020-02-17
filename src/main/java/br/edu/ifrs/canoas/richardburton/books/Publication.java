@@ -153,9 +153,8 @@ public class Publication {
                 if (other.isbn != null) {
 
                     this.isbn = other.isbn;
+                    return true;
                 }
-
-                return true;
             }
         }
 

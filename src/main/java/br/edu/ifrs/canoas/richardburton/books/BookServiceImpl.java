@@ -47,67 +47,33 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
 
         if (registered == null) {
 
-            Set<Author> authors = new HashSet<>();
-            for (Author author : book.getAuthors()) {
-
-                author.addBook(book);
-                author = authorService.create(author);
-                authors.add(author);
-            }
+            for (Author author : book.getAuthors()) author.addBook(book);
+            Set<Author> authors = authorService.create(book.getAuthors());
             book.setAuthors(authors);
 
-            for (Publication publication : book.getPublications()) {
+            book = super.create(book);
 
-                publicationService.validate(publication);
-                publication.setBook(book);
-            }
+            for (Publication publication : book.getPublications()) publication.setBook(book);
+            Set<Publication> publications = publicationService.create(book.getPublications());
+            book.setPublications(publications);
 
-            return super.create(book);
+            return book;
 
         } else {
 
-            ArrayList<Publication> registeredPublications = new ArrayList<>(registered.getPublications());
+            for (Publication publication : book.getPublications()) publication.setBook(registered);
 
+            try {
 
-            // Validate and attach publications to the already registered book
+                Set<Publication> publications = publicationService.merge(registered.getPublications(), book.getPublications());
+                registered.setPublications(publications);
+                return update(registered);
 
-            for (Publication publication : book.getPublications()) {
-
-                publicationService.validate(publication);
-                publication.setBook(registered);
-            }
-
-
-            // Add just the new publications to the already registered book
-
-            boolean newData = false;
-
-            for (Publication publication : book.getPublications()) {
-
-                boolean merged = false;
-
-                for (Publication registeredPublication : registeredPublications) {
-
-                    merged = registeredPublication.merge(publication);
-                    if (merged) break;
-                }
-
-                if (!merged) {
-
-                    registeredPublications.add(publication);
-                    newData = true;
-                }
-            }
-
-            registered.setPublications(new HashSet<>(registeredPublications));
-
-            if (!newData) {
+            } catch(PublicationDuplicateException e) {
 
                 throwDuplicateException();
                 return registered;
             }
-
-            return update(registered);
         }
     }
 

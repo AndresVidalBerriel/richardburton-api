@@ -19,9 +19,6 @@ import java.util.Set;
 
 public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> implements BookDAO<E> {
 
-    @Inject
-    private PublicationDAO publicationDAO;
-
     @Override
     @SuppressWarnings("unchecked")
     public List<E> retrieve(String title) {
@@ -32,45 +29,6 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
         query.setParameter("title", title);
 
         return (List<E>) query.getResultList();
-    }
-
-    @Override
-    public E create(E book) {
-
-        em.persist(book);
-
-        for (Publication publication : book.getPublications()) {
-
-            publication.setBook(book);
-            publicationDAO.create(publication);
-        }
-
-        return book;
-    }
-
-    @Override
-    public E update(E book) {
-
-        Set<Publication> publications = new HashSet<>();
-
-        for (Publication publication : book.getPublications()) {
-
-            publication.setBook(book);
-
-            if (publication.getId() != null) {
-
-                publication = publicationDAO.update(publication);
-
-            } else {
-
-                publicationDAO.create(publication);
-            }
-
-            publications.add(publication);
-        }
-        book.setPublications(publications);
-
-        return em.merge(book);
     }
 
     @Override
@@ -108,7 +66,6 @@ public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> imple
         } catch (ParseException e) {
 
             e.printStackTrace();
-
             return null;
         }
     }
