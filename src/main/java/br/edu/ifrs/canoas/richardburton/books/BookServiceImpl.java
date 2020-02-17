@@ -6,7 +6,9 @@ import br.edu.ifrs.canoas.richardburton.ServiceImpl;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,7 +71,7 @@ public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Lon
                 registered.setPublications(publications);
                 return update(registered);
 
-            } catch(PublicationDuplicateException e) {
+            } catch (PublicationDuplicateException e) {
 
                 throwDuplicateException();
                 return registered;

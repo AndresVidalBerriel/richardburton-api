@@ -67,7 +67,7 @@ public class PublicationServiceImpl extends ServiceImpl<Publication, Long> imple
             }
         }
 
-        if(!newData) throw new PublicationDuplicateException("All the provided publications are already registered.");
+        if (!newData) throw new PublicationDuplicateException("All the provided publications are already registered.");
 
         mergedSet.addAll(mainSet);
 

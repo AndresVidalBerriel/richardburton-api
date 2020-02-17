@@ -11,11 +11,8 @@ import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 
-import javax.inject.Inject;
 import javax.persistence.Query;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public abstract class BookDAOImpl<E extends Book> extends DAOImpl<E, Long> implements BookDAO<E> {
 
