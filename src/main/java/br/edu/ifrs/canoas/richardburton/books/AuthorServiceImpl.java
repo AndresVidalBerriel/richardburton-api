@@ -1,9 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DAO;
 import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
 import br.edu.ifrs.canoas.richardburton.EntityValidationException;
-import br.edu.ifrs.canoas.richardburton.ServiceImpl;
+import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,14 +11,13 @@ import java.util.List;
 import java.util.Set;
 
 @Stateless
-public class AuthorServiceImpl extends ServiceImpl<Author, Long> implements AuthorService {
+public class AuthorServiceImpl extends EntityServiceImpl<Author, Long> implements AuthorService {
 
     @Inject
     private AuthorDAO authorDAO;
 
-
     @Override
-    protected DAO<Author, Long> getDAO() {
+    protected AuthorDAO getDAO() {
         return authorDAO;
     }
 

@@ -1,5 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
+import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
+import br.edu.ifrs.canoas.richardburton.EntityValidationException;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
@@ -21,11 +24,11 @@ public class UserResourceImpl implements UserResource {
             user = userService.create(user);
             return Response.status(Response.Status.CREATED).entity(user).build();
 
-        } catch (EmailNotUniqueException e) {
+        } catch (DuplicateEntityException e) {
 
             return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
 
-        } catch (ConstraintViolationException e) {
+        } catch (EntityValidationException e) {
 
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

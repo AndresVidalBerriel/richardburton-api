@@ -12,7 +12,7 @@ public class OriginalBookServiceImpl extends BookServiceImpl<OriginalBook> imple
     private OriginalBookDAO originalBookDAO;
 
     @Override
-    protected BookDAO<OriginalBook> getDAO() {
+    protected OriginalBookDAO getDAO() {
 
         return originalBookDAO;
     }

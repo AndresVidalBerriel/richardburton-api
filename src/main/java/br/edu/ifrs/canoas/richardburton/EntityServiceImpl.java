@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class ServiceImpl<E, ID> implements Service<E, ID> {
+public abstract class EntityServiceImpl<E, ID> implements EntityService<E, ID> {
 
     private DAO<E, ID> dao;
 

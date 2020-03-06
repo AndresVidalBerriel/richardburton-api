@@ -2,7 +2,7 @@ package br.edu.ifrs.canoas.richardburton.books;
 
 import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
 import br.edu.ifrs.canoas.richardburton.EntityValidationException;
-import br.edu.ifrs.canoas.richardburton.ServiceImpl;
+import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class BookServiceImpl<E extends Book> extends ServiceImpl<E, Long> implements BookService<E> {
+public abstract class BookServiceImpl<E extends Book> extends EntityServiceImpl<E, Long> implements BookService<E> {
 
     @Inject
     private PublicationService publicationService;

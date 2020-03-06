@@ -11,7 +11,7 @@ public class OriginalBookResourceImpl extends BookResourceImpl<OriginalBook> imp
     private OriginalBookService originalBookService;
 
     @Override
-    protected BookService<OriginalBook> getService() {
+    protected OriginalBookService getService() {
         return originalBookService;
     }
 }

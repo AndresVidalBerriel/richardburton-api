@@ -14,7 +14,7 @@ public class TranslatedBookResourceImpl extends BookResourceImpl<TranslatedBook>
     private TranslatedBookService translatedBookService;
 
     @Override
-    protected BookService<TranslatedBook> getService() {
+    protected TranslatedBookService getService() {
         return translatedBookService;
     }
 

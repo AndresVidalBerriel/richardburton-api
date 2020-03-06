@@ -16,7 +16,7 @@ public class TranslatedBookServiceImpl extends BookServiceImpl<TranslatedBook> i
     private TranslatedBookDAO translatedBookDAO;
 
     @Override
-    protected BookDAO<TranslatedBook> getDAO() {
+    protected TranslatedBookDAO getDAO() {
         return translatedBookDAO;
     }
 

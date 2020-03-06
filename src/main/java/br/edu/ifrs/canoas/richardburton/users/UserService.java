@@ -1,5 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
+import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
+import br.edu.ifrs.canoas.richardburton.EntityService;
+import br.edu.ifrs.canoas.richardburton.EntityValidationException;
+
 import javax.ejb.Local;
 import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
@@ -7,15 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Local
-public interface UserService {
+public interface UserService extends EntityService<User, Long> {
 
-    User authenticate(String email, String authenticationString) throws EmailFormatException;
+    User authenticate(String email, String authenticationString) throws UserValidationException;
 
-    User create(@NotNull User user) throws ConstraintViolationException, EmailNotUniqueException;
-
-    List<User> retrieve();
-
-    User retrieve(Long id);
-
-    User retrieve(String email) throws EmailFormatException, NoResultException;
+    User retrieve(String email) throws UserValidationException;
 }

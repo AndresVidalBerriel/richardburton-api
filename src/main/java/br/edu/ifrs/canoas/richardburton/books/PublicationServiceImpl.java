@@ -1,22 +1,21 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DAO;
 import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
 import br.edu.ifrs.canoas.richardburton.EntityValidationException;
-import br.edu.ifrs.canoas.richardburton.ServiceImpl;
+import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PublicationServiceImpl extends ServiceImpl<Publication, Long> implements PublicationService {
+public class PublicationServiceImpl extends EntityServiceImpl<Publication, Long> implements PublicationService {
 
     @Inject
     private PublicationDAO publicationDAO;
 
     @Override
-    protected DAO<Publication, Long> getDAO() {
+    protected PublicationDAO getDAO() {
         return publicationDAO;
     }
 

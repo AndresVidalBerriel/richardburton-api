@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 @Local
-public interface Service<E, ID> {
+public interface EntityService<E, ID> {
 
     E create(E e) throws EntityValidationException, DuplicateEntityException;
 

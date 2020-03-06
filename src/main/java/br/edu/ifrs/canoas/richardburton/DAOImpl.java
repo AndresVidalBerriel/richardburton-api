@@ -12,12 +12,12 @@ public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
     protected EntityManager em;
 
     @SuppressWarnings("rawtypes")
-    private Class entityClass;
+    private Class entity;
 
     @SuppressWarnings("rawtypes")
     protected Class getEntityClass() {
-        return entityClass != null ? entityClass
-                : (entityClass = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
+        return entity != null ? entity
+                : (entity = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0]);
     }
 
