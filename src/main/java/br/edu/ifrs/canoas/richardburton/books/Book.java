@@ -1,8 +1,10 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -25,13 +27,11 @@ public abstract class Book {
 
     @NotEmpty
     @IndexedEmbedded
-    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Author> authors = new HashSet<>();
 
     @NotEmpty
     @IndexedEmbedded
-    @JsonManagedReference
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<Publication> publications = new HashSet<>();
 

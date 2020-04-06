@@ -1,7 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.TrimFilterFactory;
@@ -23,9 +22,10 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 public class OriginalBook extends Book {
 
+
     @ContainedIn
-    @JsonIgnore
     @OneToMany(mappedBy = "original")
+    @JsonBackReference
     private List<TranslatedBook> translations;
 
     public List<TranslatedBook> getTranslations() {

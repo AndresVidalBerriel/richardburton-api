@@ -1,6 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.TrimFilterFactory;
