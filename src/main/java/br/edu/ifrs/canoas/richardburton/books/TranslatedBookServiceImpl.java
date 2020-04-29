@@ -47,6 +47,11 @@ public class TranslatedBookServiceImpl extends BookServiceImpl<TranslatedBook> i
     @Override
     public TranslatedBook create(TranslatedBook translation) throws EntityValidationException, DuplicateEntityException {
 
+        if(translation == null) {
+
+            throw new TranslatedBookValidationException("A translated book must be provided.");
+        }
+
         OriginalBook original = translation.getOriginal();
         original = originalBookService.create(original);
         translation.setOriginal(original);

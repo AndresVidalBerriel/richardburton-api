@@ -32,6 +32,13 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>3.1.4</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -118,6 +125,12 @@
             <version>3.9.3.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>3.9.3.Final</version>
+        </dependency>
+
         <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -181,23 +194,24 @@
 
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
+            <artifactId>arquillian-rest-client-impl-3x</artifactId>
+            <version>1.0.0.Alpha4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-persistence-dbunit</artifactId>
             <version>1.0.0.Alpha7</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-rest-client-api</artifactId>
-            <version>1.0.0.Alpha4</version>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-depchain</artifactId>
+            <version>3.1.4</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-rest-warp-impl-jaxrs-2.0</artifactId>
-            <version>1.0.0.Alpha4</version>
-            <scope>test</scope>
+            <type>pom</type>
         </dependency>
 
     </dependencies>
@@ -233,9 +247,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.0.0-M4</version>
-                <configuration>
-                    <argLine>-Xmx1024m</argLine>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>

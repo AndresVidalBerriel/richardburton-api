@@ -9,6 +9,11 @@ public class TranslatedBookValidationException extends EntityValidationException
 
     private final Set<ConstraintViolation<TranslatedBook>> violations;
 
+    public TranslatedBookValidationException(String message) {
+        super(message);
+        this.violations = null;
+    }
+
     public TranslatedBookValidationException(Set<ConstraintViolation<TranslatedBook>> violations) {
         super("Translated book validation failed" + violations.toString());
         this.violations = violations;

@@ -13,7 +13,5 @@ import java.util.List;
 @Local
 public interface UserService extends EntityService<User, Long> {
 
-    User authenticate(String email, String authenticationString) throws UserValidationException;
-
-    User retrieve(String email) throws UserValidationException;
+    User retrieve(String email) throws UserValidationException, UserNotFoundException;
 }

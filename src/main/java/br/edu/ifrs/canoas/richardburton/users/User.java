@@ -1,10 +1,14 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import org.apache.commons.codec.binary.Base64;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,17 +27,21 @@ public class User {
 
     @Column(unique = true)
     @NotNull
+    @NotBlank
     @Email(regexp = EMAIL_FORMAT)
     private String email;
 
+    @NotNull
     @NotBlank
     private String firstName;
 
+    @NotNull
     @NotBlank
     private String lastName;
 
+    @NotNull
     @NotBlank
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @JsonIgnore
     private String authenticationString;
 
     @NotNull
@@ -48,9 +56,6 @@ public class User {
 
     @NullOrNotBlank
     private String occupation;
-
-    @Transient
-    private String token;
 
     public String getEmail() {
         return email;
@@ -116,14 +121,6 @@ public class User {
         this.admin = admin;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public Long getId() {
         return id;
     }
@@ -132,4 +129,6 @@ public class User {
         this.id = id;
     }
 
+    @JsonIgnore
+    public String getBasicAuthToken() { return Base64.encodeBase64String((email+":"+authenticationString).getBytes());}
 }

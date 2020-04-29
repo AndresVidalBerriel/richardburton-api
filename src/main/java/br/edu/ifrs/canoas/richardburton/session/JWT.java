@@ -12,7 +12,8 @@ import java.util.Properties;
 
 public class JWT {
 
-    private static final long TOKEN_TTL_MS = 3600000;
+    private static final String ISSUER = "https://richardburton-api.canoas.ifrs.edu.br";
+    private static final long TOKEN_TTL_MS = 2100000;
     private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
     private static Key secret = null;
 
@@ -43,7 +44,7 @@ public class JWT {
         return secret;
     }
 
-    public static String issueToken(String subject, String issuer, boolean admin) {
+    public static String issueToken(String subject, boolean admin) {
 
         JwtBuilder builder = Jwts.builder();
 
@@ -51,7 +52,7 @@ public class JWT {
         Date exp = new Date(now.getTime() + TOKEN_TTL_MS);
 
         builder.setSubject(subject);
-        builder.setIssuer(issuer);
+        builder.setIssuer(ISSUER);
         builder.setIssuedAt(now);
         builder.setExpiration(exp);
         builder.signWith(ALGORITHM, getSecret());
@@ -62,7 +63,7 @@ public class JWT {
 
     public static Claims decodeToken(String token) throws JwtException {
 
-        return Jwts.parser().setSigningKey(getSecret()).parseClaimsJws(token).getBody();
+        return Jwts.parser().requireIssuer(ISSUER).setSigningKey(getSecret()).parseClaimsJws(token).getBody();
     }
 
 }

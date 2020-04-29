@@ -17,7 +17,10 @@ public class UserResourceImpl implements UserResource {
     @Inject
     private UserService userService;
 
-    public Response create(User user) {
+    @Override
+    public Response create(User user, String authenticationString) {
+
+        if(user != null) user.setAuthenticationString(authenticationString);
 
         try {
 
@@ -34,12 +37,14 @@ public class UserResourceImpl implements UserResource {
         }
     }
 
+    @Override
     public Response retrieve() {
 
         List<User> users = userService.retrieve();
         return Response.status(Response.Status.OK).entity(users).build();
     }
 
+    @Override
     public Response retrieve(Long id) {
 
         User user = userService.retrieve(id);
