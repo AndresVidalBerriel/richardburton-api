@@ -17,7 +17,6 @@ public class DataInitializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         Data.initialize(translatedBookService);
-
     }
 
 }

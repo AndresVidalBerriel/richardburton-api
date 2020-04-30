@@ -1,27 +1,37 @@
 package br.edu.ifrs.canoas.richardburton;
 
 import br.edu.ifrs.canoas.richardburton.books.*;
+import br.edu.ifrs.canoas.richardburton.session.JWT;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Data {
 
     public static void initialize(TranslatedBookService translatedBookService) {
 
-        String pathToData = "/Users/andres/richardburton/data.csv";
-        String line;
+        String pathToData="";
 
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(pathToData), StandardCharsets.ISO_8859_1))) {
+        try {
+
+            InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("dev.properties");
+            Properties properties = new Properties();
+
+            assert propertiesStream != null;
+            properties.load(propertiesStream);
+
+            pathToData = properties.getProperty("INITIAL_DATA_PATH");
+
+        } catch(IOException e) {
+
+            e.printStackTrace();
+        }
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathToData), StandardCharsets.ISO_8859_1))) {
+
+            String line;
 
             while ((line = br.readLine()) != null) {
 
