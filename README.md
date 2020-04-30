@@ -2,21 +2,21 @@
 
 ## Keytool Generator
 
-keytoolcommand = keytool -genseckey -keyalg AES -alias jwtsecretkey -keystore keys@richardburton -keysize 256
+`keytoolcommand = keytool -genseckey -keyalg AES -alias jwtsecretkey -keystore keys@richardburton -keysize 256`
 
 ## app.properties
 
 A properties file `app.properties` must be placed in src/main/resources folder. The format is `key=value`. It must specify:
 
--`keystoreloc`: the location of the KeyStore generated with Keytool.
--`jwtkeyalias`: the alias of the Key generated with Keytool.
--`keystorepsw`: the password of the KeyStore generated with Keytool.
+- `keystoreloc`: the location of the KeyStore generated with Keytool.
+- `jwtkeyalias`: the alias of the Key generated with Keytool.
+- `keystorepsw`: the password of the KeyStore generated with Keytool.
 
 ## dev.properties
 
 A properties file `dev.properties` must be placed in src/main/resources folder. The format is `key=value`. It must specify:
 
--`INITIAL_DATA_PATH`: the location of a csv file with initial data.
+- `INITIAL_DATA_PATH`: the location of a csv file with initial data.
 
 This CSV contains one TranslatedBook Publication per line, formmated like:
 
@@ -29,7 +29,7 @@ Escape `;` putting the whole field in double quotes. For several translators, se
 A configuration file for JPA `persistence.xml` must be placed in src/main/resources/META-INF folder.
 Here is an example, of what it should look like.
 
--`LUCENE_INDEX_BASE` must be set to the actual Apache Lucene index directory. It could be any directory where the user has enough privileges to read, write, create and delete files. If this is not set, Hibernate Search won't work.
+- `LUCENE_INDEX_BASE` must be set to the actual Apache Lucene index directory. It could be any directory where the user has enough privileges to read, write, create and delete files. If this is not set, Hibernate Search won't work.
 
 ```
 <persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
@@ -94,7 +94,7 @@ Wildfly configuration `standalone.xml` file must include Development and Testing
 
 A `test-persistence.xml` file must be placed inside `src/test/resources`. With the above datasource configuration, it sould look like this.
 
--`LUCENE_INDEX_BASE` must be set to the actual Apache Lucene index directory. It could be any directory where the user has enough privileges to read, write, create and delete files. If this is not set, Hibernate Search won't work.
+- `LUCENE_INDEX_BASE` must be set to the actual Apache Lucene index directory. It could be any directory where the user has enough privileges to read, write, create and delete files. If this is not set, Hibernate Search won't work.
 
 ```
 <persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
