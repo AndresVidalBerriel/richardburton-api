@@ -17,7 +17,7 @@ public class UserValidationException extends EntityValidationException {
     }
 
     public UserValidationException(Set<ConstraintViolation<User>> violations) {
-        super("Author validation failed" + violations.toString());
+        super("User validation failed" + violations.toString());
         this.violations = violations;
     }
 
