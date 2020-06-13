@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.apache.commons.codec.binary.Base64;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -130,5 +128,7 @@ public class User {
     }
 
     @JsonIgnore
-    public String getBasicAuthToken() { return Base64.encodeBase64String((email+":"+authenticationString).getBytes());}
+    public String getBasicAuthToken() {
+        return Base64.encodeBase64String((email + ":" + authenticationString).getBytes());
+    }
 }

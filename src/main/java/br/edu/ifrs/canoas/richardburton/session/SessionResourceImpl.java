@@ -1,13 +1,10 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
-import br.edu.ifrs.canoas.richardburton.users.User;
 import br.edu.ifrs.canoas.richardburton.users.UserValidationException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 

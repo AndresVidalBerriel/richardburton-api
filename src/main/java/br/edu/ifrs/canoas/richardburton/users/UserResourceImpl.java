@@ -5,7 +5,6 @@ import br.edu.ifrs.canoas.richardburton.EntityValidationException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -20,7 +19,8 @@ public class UserResourceImpl implements UserResource {
     @Override
     public Response create(User user, String authenticationString) {
 
-        if(user != null) user.setAuthenticationString(authenticationString);
+        if (user != null)
+            user.setAuthenticationString(authenticationString);
 
         try {
 

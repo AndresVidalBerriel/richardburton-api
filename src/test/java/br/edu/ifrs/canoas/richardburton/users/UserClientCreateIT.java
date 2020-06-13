@@ -8,12 +8,10 @@ import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.persistence.Cleanup;
-import org.jboss.arquillian.persistence.CleanupStrategy;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,12 +28,11 @@ public class UserClientCreateIT {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addClass(Session.class)
-                .addClasses(ApplicationResource.class, CORSFilter.class)
-                .addClasses(DAO.class, DAOImpl.class)
+        return ShrinkWrap.create(WebArchive.class).addClass(Session.class)
+                .addClasses(ApplicationResource.class, CORSFilter.class).addClasses(DAO.class, DAOImpl.class)
                 .addClasses(EntityService.class, EntityServiceImpl.class)
-                .addClasses(DuplicateEntityException.class, EntityValidationException.class, EntityNotFoundException.class)
+                .addClasses(DuplicateEntityException.class, EntityValidationException.class,
+                        EntityNotFoundException.class)
                 .addPackage(UserResource.class.getPackage())
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml");
     }

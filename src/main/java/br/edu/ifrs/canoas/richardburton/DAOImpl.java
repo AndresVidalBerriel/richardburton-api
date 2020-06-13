@@ -8,6 +8,8 @@ import java.util.List;
 
 public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
 
+    private static final long serialVersionUID = 1L;
+
     @PersistenceContext
     protected EntityManager em;
 
@@ -18,7 +20,7 @@ public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
     protected Class getEntityClass() {
         return entity != null ? entity
                 : (entity = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0]);
+                        .getActualTypeArguments()[0]);
     }
 
     @Override

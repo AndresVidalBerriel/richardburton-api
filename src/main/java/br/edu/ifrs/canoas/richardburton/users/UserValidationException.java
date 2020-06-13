@@ -7,6 +7,8 @@ import java.util.Set;
 
 public class UserValidationException extends EntityValidationException {
 
+    private static final long serialVersionUID = 1L;
+
     private final Set<ConstraintViolation<User>> violations;
 
     public UserValidationException(String message) {

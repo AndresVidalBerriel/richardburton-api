@@ -1,7 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

@@ -11,11 +11,9 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.persistence.Cleanup;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,29 +24,22 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-
 @RunWith(Arquillian.class)
 public class SessionClientCreateIT {
 
     private User user;
 
-
     @Deployment
     public static WebArchive createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class)
-                .addClass(Session.class)
-                .addClasses(ApplicationResource.class, CORSFilter.class)
-                .addClasses(DAO.class, DAOImpl.class)
+        return ShrinkWrap.create(WebArchive.class).addClass(Session.class)
+                .addClasses(ApplicationResource.class, CORSFilter.class).addClasses(DAO.class, DAOImpl.class)
                 .addClasses(EntityService.class, EntityServiceImpl.class)
-                .addClasses(DuplicateEntityException.class, EntityValidationException.class, EntityNotFoundException.class)
-                .addPackage(UserResource.class.getPackage())
-                .addPackage(SessionResource.class.getPackage())
-                .addAsLibraries(Maven.resolver()
-                        .loadPomFromFile(new File("pom.xml"))
-                        .resolve("io.jsonwebtoken:jjwt:0.9.1")
-                        .withTransitivity()
-                        .asFile())
+                .addClasses(DuplicateEntityException.class, EntityValidationException.class,
+                        EntityNotFoundException.class)
+                .addPackage(UserResource.class.getPackage()).addPackage(SessionResource.class.getPackage())
+                .addAsLibraries(Maven.resolver().loadPomFromFile(new File("pom.xml"))
+                        .resolve("io.jsonwebtoken:jjwt:0.9.1").withTransitivity().asFile())
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("app.properties", "app.properties");
     }
@@ -72,14 +63,11 @@ public class SessionClientCreateIT {
     public void cleanupBefore() {
     }
 
-
     @Test
     @RunAsClient
     @InSequence(2)
-    public void success(
-            @ArquillianResteasyResource("api/v1") UserResource userResource,
-            @ArquillianResteasyResource("api/v1") SessionResource sessionResource
-    ) {
+    public void success(@ArquillianResteasyResource("api/v1") UserResource userResource,
+            @ArquillianResteasyResource("api/v1") SessionResource sessionResource) {
 
         assert userResource != null;
         assert sessionResource != null;
