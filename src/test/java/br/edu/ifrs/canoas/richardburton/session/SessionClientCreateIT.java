@@ -33,7 +33,9 @@ public class SessionClientCreateIT {
     public static WebArchive createDeployment() {
 
         return ShrinkWrap.create(WebArchive.class).addClass(Session.class)
-                .addClasses(ApplicationResource.class, CORSFilter.class).addClasses(DAO.class, DAOImpl.class)
+                .addClass(RichardBurton.class)
+                .addClasses(ApplicationResource.class, CORSFilter.class)
+                .addClasses(DAO.class, DAOImpl.class)
                 .addClasses(EntityService.class, EntityServiceImpl.class)
                 .addClasses(DuplicateEntityException.class, EntityValidationException.class,
                         EntityNotFoundException.class)

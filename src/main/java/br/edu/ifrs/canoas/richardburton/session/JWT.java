@@ -2,60 +2,27 @@ package br.edu.ifrs.canoas.richardburton.session;
 
 import io.jsonwebtoken.*;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.*;
-import java.security.cert.CertificateException;
 import java.util.Date;
-import java.util.Properties;
+
+import br.edu.ifrs.canoas.richardburton.RichardBurton;
 
 public class JWT {
 
-    private static final String ISSUER = "https://richardburton-api.canoas.ifrs.edu.br";
-    private static final long TOKEN_TTL_MS = 2100000;
     private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
-    private static Key secret = null;
-
-    private static Key getSecret() {
-
-        if (secret == null)
-            try {
-
-                InputStream propertiesStream = JWT.class.getClassLoader().getResourceAsStream("app.properties");
-                Properties properties = new Properties();
-
-                assert propertiesStream != null;
-                properties.load(propertiesStream);
-
-                char[] ksPassword = properties.getProperty("keystorepsw").toCharArray();
-                String ksLocation = properties.getProperty("keystoreloc");
-                String keyAlias = properties.getProperty("jwtkeyalias");
-                KeyStore ks = KeyStore.getInstance("PKCS12");
-                ks.load(new FileInputStream(ksLocation), ksPassword);
-                secret = ks.getKey(keyAlias, ksPassword);
-
-            } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
-                    | UnrecoverableKeyException e) {
-
-                e.printStackTrace();
-            }
-
-        return secret;
-    }
 
     public static String issueToken(String subject, boolean admin) {
 
         JwtBuilder builder = Jwts.builder();
 
         Date now = new Date();
-        Date exp = new Date(now.getTime() + TOKEN_TTL_MS);
+        Date exp = new Date(now.getTime() + RichardBurton.getJWTTokenTTLMS());
 
         builder.setSubject(subject);
-        builder.setIssuer(ISSUER);
+        builder.setIssuer(RichardBurton.getJWTTokenIssuer());
         builder.setIssuedAt(now);
         builder.setExpiration(exp);
-        builder.signWith(ALGORITHM, getSecret());
+        builder.signWith(ALGORITHM, RichardBurton.getJWTSecret());
         builder.claim("admin", admin);
 
         return builder.compact();
@@ -63,7 +30,10 @@ public class JWT {
 
     public static Claims decodeToken(String token) throws JwtException {
 
-        return Jwts.parser().requireIssuer(ISSUER).setSigningKey(getSecret()).parseClaimsJws(token).getBody();
+        String issuer = RichardBurton.getJWTTokenIssuer();
+        Key secret = RichardBurton.getJWTSecret();
+
+        return Jwts.parser().requireIssuer(issuer).setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
 }
