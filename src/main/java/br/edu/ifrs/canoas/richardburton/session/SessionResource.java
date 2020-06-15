@@ -15,4 +15,7 @@ public interface SessionResource {
     @GET
     Response refresh(@HeaderParam(HttpHeaders.AUTHORIZATION) String auth);
 
+    @HEAD
+    Response verify(@HeaderParam(HttpHeaders.AUTHORIZATION) String auth);
+
 }

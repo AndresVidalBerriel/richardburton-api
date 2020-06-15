@@ -52,4 +52,23 @@ public class SessionResourceImpl implements SessionResource {
 
         }
     }
+
+    @Override
+    public Response verify(String auth) {
+
+        try {
+
+            sessionService.authenticate(AuthenticationParser.parseBearer(auth));
+            return Response.status(Response.Status.OK).build();
+
+        } catch (AuthenticationFailedException e) {
+
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        } catch (AuthenticationParseException e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+    }
 }
