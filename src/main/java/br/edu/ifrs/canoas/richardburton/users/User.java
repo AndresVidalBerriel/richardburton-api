@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
+@Table(name = "_User")
 public class User {
 
     public static final String EMAIL_FORMAT = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
