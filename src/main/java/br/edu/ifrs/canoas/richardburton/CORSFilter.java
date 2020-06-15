@@ -11,9 +11,11 @@ public class CORSFilter implements ContainerResponseFilter {
     @Override
     public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext) {
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, rb-authentication-string");
+        responseContext.getHeaders().add("Access-Control-Allow-Headers",
+                "origin, content-type, accept, authorization, rb-authentication-string");
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
         responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        responseContext.getHeaders().add("Access-Control-Expose-Headers", "rb-authorization");
         responseContext.getHeaders().add("Access-Control-Max-Age", "1209600");
     }
 
