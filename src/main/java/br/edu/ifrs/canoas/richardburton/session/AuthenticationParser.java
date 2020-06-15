@@ -13,7 +13,7 @@ public class AuthenticationParser {
             throw new AuthenticationParseException("Missing authorization header.");
 
         if (!auth.startsWith(BEARER_PREFIX))
-            throw new AuthenticationParseException("Invalid Basic authorization header.");
+            throw new AuthenticationParseException("Invalid Bearer authorization header.");
 
         return auth.substring(BEARER_PREFIX.length());
     }
@@ -24,13 +24,13 @@ public class AuthenticationParser {
             throw new AuthenticationParseException("Missing authorization header.");
 
         if (!auth.startsWith(BASIC_PREFIX))
-            throw new AuthenticationParseException("Invalid Bearer authorization header.");
+            throw new AuthenticationParseException("Invalid Basic authorization header.");
 
         String encoded = auth.substring(BASIC_PREFIX.length());
         String[] decoded = new String(Base64.getDecoder().decode(encoded)).split(":", -1);
 
         if (decoded.length != 2)
-            throw new AuthenticationParseException("Invalid Bearer authorization header.");
+            throw new AuthenticationParseException("Invalid Basic authorization header.");
 
         return new Credentials(decoded[0], decoded[1]);
     }
