@@ -13,7 +13,7 @@
     <properties>
 
         <app.properties>src/main/resources/app.properties</app.properties>
-        <deployment.properties>src/main/resources/deployment.properties</deployment.properties>
+        <server.properties>src/main/resources/server.properties</server.properties>
         <jdk.version>13</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -230,7 +230,7 @@
 
         <filters>
             <filter>${app.properties}</filter>
-            <filter>${deployment.properties}</filter>
+            <filter>${server.properties}</filter>
         </filters>
 
         <resources>
@@ -264,7 +264,7 @@
                         <configuration>
                             <files>
                                 <file>${app.properties}</file>
-                                <file>${deployment.properties}</file>
+                                <file>${server.properties}</file>
                             </files>
                         </configuration>
                     </execution>
