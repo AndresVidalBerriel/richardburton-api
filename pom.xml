@@ -15,8 +15,6 @@
         <app.properties>src/main/resources/app.properties</app.properties>
         <deployment.properties>src/main/resources/deployment.properties</deployment.properties>
         <jdk.version>13</jdk.version>
-
-        <project.build.finalName>richardburton</project.build.finalName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -227,6 +225,9 @@
     </dependencies>
 
     <build>
+
+        <finalName>richardburton</finalName>
+
         <filters>
             <filter>${app.properties}</filter>
             <filter>${deployment.properties}</filter>
@@ -338,7 +339,7 @@
 
                     <username>${wildfly.management.username}</username>
                     <password>${wildfly.management.password}</password>
-                    <hostname>${wildfly.management.address}</hostname>
+                    <hostname>${wildfly.host}</hostname>
                     <port>${wildfly.management.port}</port>
                 </configuration>
                 <executions>
