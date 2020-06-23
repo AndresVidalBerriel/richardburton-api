@@ -218,11 +218,18 @@
             <type>pom</type>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <filters>
             <filter>${app.properties}</filter>
+            <filter>${deployment.properties}</filter>
         </filters>
 
         <resources>
@@ -231,6 +238,13 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
 
         <plugins>
 
@@ -275,8 +289,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <!--suppress UnresolvedMavenProperty -->
-                            <directory>${hsearch_indexes_dir}</directory>
+                            <directory>${hibernate.search.indexBase}</directory>
                             <includes>
                                 <include>**/*</include>
                             </includes>
@@ -323,11 +336,10 @@
                 <configuration>
                     <filename>${project.build.finalName}.war</filename>
 
-                    <!--suppress UnresolvedMavenProperty -->
-                    <username>${wildfly.username}</username>
-
-                    <!--suppress UnresolvedMavenProperty -->
-                    <password>${wildfly.password}</password>
+                    <username>${wildfly.management.username}</username>
+                    <password>${wildfly.management.password}</password>
+                    <hostname>${wildfly.management.address}</hostname>
+                    <port>${wildfly.management.port}</port>
                 </configuration>
                 <executions>
                     <execution>

@@ -29,12 +29,14 @@ public class UserClientCreateIT {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class).addClass(Session.class)
+                .addClass(TestInitializer.class)
                 .addClasses(ApplicationResource.class, CORSFilter.class).addClasses(DAO.class, DAOImpl.class)
                 .addClasses(EntityService.class, EntityServiceImpl.class)
                 .addClasses(DuplicateEntityException.class, EntityValidationException.class,
                         EntityNotFoundException.class)
                 .addPackage(UserResource.class.getPackage())
-                .addAsResource("test-persistence.xml", "META-INF/persistence.xml");
+                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("app.properties", "app.properties");
     }
 
     @Before

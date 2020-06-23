@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -33,15 +34,18 @@ public class SessionClientCreateIT {
     public static WebArchive createDeployment() {
 
         return ShrinkWrap.create(WebArchive.class).addClass(Session.class)
-                .addClass(RichardBurton.class)
+                .addClasses(RichardBurton.class, Initializer.class, TestInitializer.class)
                 .addClasses(ApplicationResource.class, CORSFilter.class)
                 .addClasses(DAO.class, DAOImpl.class)
                 .addClasses(EntityService.class, EntityServiceImpl.class)
-                .addClasses(DuplicateEntityException.class, EntityValidationException.class,
-                        EntityNotFoundException.class)
+                .addClasses(DuplicateEntityException.class, EntityValidationException.class, EntityNotFoundException.class)
                 .addPackage(UserResource.class.getPackage()).addPackage(SessionResource.class.getPackage())
-                .addAsLibraries(Maven.resolver().loadPomFromFile(new File("pom.xml"))
-                        .resolve("io.jsonwebtoken:jjwt:0.9.1").withTransitivity().asFile())
+                .addAsLibraries(
+                        Maven.resolver()
+                                .loadPomFromFile(new File("pom.xml"))
+                                .resolve("io.jsonwebtoken:jjwt:0.9.1")
+                                .withTransitivity()
+                                .asFile())
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsResource("app.properties", "app.properties");
     }
