@@ -27,14 +27,12 @@ target/
 *.project
 .settings
 .vscode/*
-src/main/resources/app.properties
+
 .DS_Store
 .idea
 richardburton.iml
 src/main/resources/.DS_Store
-/src/main/resources/dev.properties
-src/main/resources/META-INF/persistence.xml
 
-src/test/resources/test-persistence.xml
-src/test/resources/test-persistence_mysql.xml
-src/test/resources/arquillian.xml
+src/main/resources/app.properties
+src/main/resources/dev.properties
+src/main/resources/server.properties

@@ -1,0 +1,18 @@
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="richardburton">
+        <description>RichardBurton Persistence Unit</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>${wildfly.datasource.name}</jta-data-source>
+
+        <properties>
+            <property name="hibernate.hbm2ddl.auto" value="${wildfly.datasource.hbm2dll.auto}"/>
+            <property name="hibernate.dialect" value="${wildfly.datasource.dialect}"/>
+            <property name="hibernate.search.default.directory_provider" value="filesystem"/>
+            <property name="hibernate.search.default.indexBase" value="${hibernate.search.indexBase}"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>
