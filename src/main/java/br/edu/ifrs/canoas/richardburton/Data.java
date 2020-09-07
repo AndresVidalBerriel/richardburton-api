@@ -29,10 +29,10 @@ public class Data {
             e.printStackTrace();
         }
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathToData), StandardCharsets.ISO_8859_1))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathToData), StandardCharsets.UTF_8))) {
 
             String line;
-
+            try{
             while ((line = br.readLine()) != null) {
 
                 String[] data = line.split("(;)(?=(?:[^\"]|\"[^\"]*\")*$)");
@@ -85,6 +85,10 @@ public class Data {
 
                     e.printStackTrace();
                 }
+            }
+        }
+            catch (ArrayIndexOutOfBoundsException ex){
+                ex.printStackTrace();
             }
 
         } catch (IOException e) {

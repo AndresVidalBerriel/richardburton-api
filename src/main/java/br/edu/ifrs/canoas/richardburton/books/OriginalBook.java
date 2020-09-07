@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.*;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AnalyzerDef(name = "originalsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
         @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
@@ -34,6 +35,17 @@ public class OriginalBook extends Book {
 
     public void setTranslations(List<TranslatedBook> translations) {
         this.translations = translations;
+    }
+
+    public String getCSVString(){
+        Publication[] original = this.getPublications().toArray(Publication[]::new);
+        return "OR;"+this.getAuthors().stream().map(Author::getName).collect(Collectors.joining(","))
+                + original[0].getCSVString();
+    }
+
+    public String getPDFString(){
+        Publication[] original = this.getPublications().toArray(Publication[]::new);
+        return original[0].getTitle()+ " - " + this.getAuthors().stream().map(Author::getName).collect(Collectors.joining(","));
     }
 
 }

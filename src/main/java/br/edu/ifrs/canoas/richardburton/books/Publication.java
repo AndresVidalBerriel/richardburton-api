@@ -209,6 +209,14 @@ public class Publication {
             return year.equals(other.year);
     }
 
+    public String getCSVString(){
+        return ";"+title+";"+publisher+";"+country+";"+year+";"+isbn+";";
+    }
+
+    public String getPDFString(){
+        return title+ ". " + country + ": " + publisher + ", " + year + "."+" ISBN: "+ isbn +"\n";
+    }
+
     @Override
     public String toString() {
         return "Publication [country=" + country + ", id=" + id + ", isbn=" + isbn + ", publisher=" + publisher

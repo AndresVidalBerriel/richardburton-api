@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.*;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import java.util.stream.Collectors;
 
 @AnalyzerDef(name = "translationsAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
         @TokenFilterDef(factory = StandardFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class),
@@ -33,6 +34,42 @@ public class TranslatedBook extends Book {
 
     public void setOriginal(OriginalBook original) {
         this.original = original;
+    }
+
+    public String formatToCSV(){
+        String allPublications ="";
+        Publication[] translations = this.getPublications().toArray(Publication[]::new);
+        for (int x=0; x< translations.length; x++) {
+                        
+            allPublications = allPublications.concat(
+                "TR;"+this.getAuthors().stream().map(Author::getName).collect(Collectors.joining(","))
+                + translations[x].getCSVString());
+                
+            if (translations.length>1 && x!=translations.length -1){
+                allPublications = allPublications.concat("\n");
+            }
+            
+        }
+        return allPublications;
+    }
+
+    public String formatToPDF(){
+        String allPublications = this.getAuthors().stream()
+                .map(Author::getName).collect(Collectors.joining(",")) + "\n";
+
+        Publication[] translations = this.getPublications().toArray(Publication[]::new);
+
+        for (int x=0; x< translations.length; x++) {
+                        
+            allPublications = allPublications.concat(translations[x].getPDFString());
+                
+            if (x==translations.length -1){
+                allPublications = allPublications.concat("\n");
+            }
+            
+        }
+        return allPublications;
+        
     }
 
 }
