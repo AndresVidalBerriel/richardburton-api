@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.session;
+package br.edu.ifrs.canoas.richardburton.auth;
 
 public class AuthenticationFailedException extends Exception {
 

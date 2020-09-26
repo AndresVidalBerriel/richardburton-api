@@ -1,11 +1,17 @@
-package br.edu.ifrs.canoas.richardburton.session;
+package br.edu.ifrs.canoas.richardburton.auth;
 
+
+import javax.ws.rs.core.HttpHeaders;
 import java.util.Base64;
 
 public class AuthenticationParser {
 
     private static String BEARER_PREFIX = "Bearer ";
     private static String BASIC_PREFIX = "Basic ";
+
+    public static String parseBearer(HttpHeaders headers)  throws AuthenticationParseException {
+        return parseBearer(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+    }
 
     public static String parseBearer(String auth) throws AuthenticationParseException {
 
@@ -16,6 +22,10 @@ public class AuthenticationParser {
             throw new AuthenticationParseException("Invalid Bearer authorization header.");
 
         return auth.substring(BEARER_PREFIX.length());
+    }
+
+    public static Credentials parseBasic(HttpHeaders headers)  throws AuthenticationParseException {
+        return parseBasic(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
     }
 
     public static Credentials parseBasic(String auth) throws AuthenticationParseException {
@@ -32,6 +42,9 @@ public class AuthenticationParser {
         if (decoded.length != 2)
             throw new AuthenticationParseException("Invalid Basic authorization header.");
 
-        return new Credentials(decoded[0], decoded[1]);
+        return new CredentialsBuilder()
+                .identifier(decoded[0])
+                .secret(decoded[1])
+                .build();
     }
 }

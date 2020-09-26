@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.session;
+package br.edu.ifrs.canoas.richardburton.auth;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;
@@ -9,7 +9,5 @@ import java.lang.annotation.Target;
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-@interface RequiresAuthentication {
-
-    Privileges privileges() default Privileges.REGULAR;
+public @interface Auth {
 }

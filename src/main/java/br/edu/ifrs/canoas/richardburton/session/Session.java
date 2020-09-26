@@ -6,7 +6,7 @@ import org.jboss.resteasy.util.Hex;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Session {
+class Session {
 
     private String token;
 
@@ -31,21 +31,5 @@ public class Session {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public static String digest(String authenticationString) {
-
-        try {
-
-            MessageDigest md = MessageDigest.getInstance("SHA3-512");
-            byte[] bytes = Hex.decodeHex(authenticationString);
-            byte[] hashed = md.digest(bytes);
-            return Hex.encodeHex(hashed);
-
-        } catch (NoSuchAlgorithmException e) {
-
-            throw new RuntimeException(e);
-        }
-
     }
 }

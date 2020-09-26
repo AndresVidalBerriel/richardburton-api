@@ -1,7 +1,7 @@
 package br.edu.ifrs.canoas.richardburton;
 
 import br.edu.ifrs.canoas.richardburton.books.*;
-import br.edu.ifrs.canoas.richardburton.session.JWT;
+import br.edu.ifrs.canoas.richardburton.auth.JWT;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

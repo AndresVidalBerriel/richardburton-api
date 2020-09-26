@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.session;
+package br.edu.ifrs.canoas.richardburton.auth;
 
 import io.jsonwebtoken.*;
 
@@ -11,7 +11,7 @@ public class JWT {
 
     private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.HS512;
 
-    public static String issueToken(String subject, boolean admin) {
+    public static String issueToken(String subject) {
 
         JwtBuilder builder = Jwts.builder();
 
@@ -23,7 +23,6 @@ public class JWT {
         builder.setIssuedAt(now);
         builder.setExpiration(exp);
         builder.signWith(ALGORITHM, RichardBurton.getJWTSecret());
-        builder.claim("admin", admin);
 
         return builder.compact();
     }

@@ -1,11 +1,14 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
+import br.edu.ifrs.canoas.richardburton.auth.*;
+import br.edu.ifrs.canoas.richardburton.users.UserNotFoundException;
 import br.edu.ifrs.canoas.richardburton.users.UserValidationException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 @Stateless
@@ -17,6 +20,9 @@ public class SessionResourceImpl implements SessionResource {
     @Inject
     private SessionService sessionService;
 
+    @Inject
+    private AuthenticationService authenticationService;
+
     public Response create(String auth) {
 
         try {
@@ -26,11 +32,15 @@ public class SessionResourceImpl implements SessionResource {
 
         } catch (AuthenticationParseException | UserValidationException e) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 
         } catch (AuthenticationFailedException e) {
 
-            return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic").build();
+            return Response.status(Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic").build();
+
+        } catch (UserNotFoundException e) {
+
+            return Response.status(Status.NOT_FOUND).build();
         }
     }
 
@@ -38,17 +48,19 @@ public class SessionResourceImpl implements SessionResource {
     public Response refresh(String auth) {
 
         try {
+            String token = AuthenticationParser.parseBearer(auth);
+            Credentials credentials = new CredentialsBuilder().token(token).build();
+            String refreshed = authenticationService.refreshToken(credentials).getToken();
 
-            String refreshed = sessionService.refresh(AuthenticationParser.parseBearer(auth));
             return Response.ok(refreshed).build();
 
         } catch (AuthenticationFailedException e) {
 
-            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
+            return Response.status(Status.UNAUTHORIZED).entity(e.getMessage()).build();
 
         } catch (AuthenticationParseException e) {
 
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 
         }
     }
@@ -57,18 +69,19 @@ public class SessionResourceImpl implements SessionResource {
     public Response verify(String auth) {
 
         try {
+            String token = AuthenticationParser.parseBearer(auth);
+            Credentials credentials = new CredentialsBuilder().token(token).build();
+            authenticationService.authenticate(credentials);
 
-            sessionService.authenticate(AuthenticationParser.parseBearer(auth));
-            return Response.status(Response.Status.OK).build();
+            return Response.status(Status.OK).build();
 
         } catch (AuthenticationFailedException e) {
 
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Status.UNAUTHORIZED).build();
 
         } catch (AuthenticationParseException e) {
 
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Status.BAD_REQUEST).build();
         }
-
     }
 }
