@@ -39,11 +39,6 @@ public class User {
     private String lastName;
 
     @NotNull
-    @NotBlank
-    @JsonIgnore
-    private String authenticationString;
-
-    @NotNull
     @JsonProperty(access = Access.READ_ONLY)
     private boolean admin;
 
@@ -104,14 +99,6 @@ public class User {
         this.occupation = occupation;
     }
 
-    public String getAuthenticationString() {
-        return authenticationString;
-    }
-
-    public void setAuthenticationString(String authenticationString) {
-        this.authenticationString = authenticationString;
-    }
-
     public boolean isAdmin() {
         return admin;
     }
@@ -126,10 +113,5 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @JsonIgnore
-    public String getBasicAuthToken() {
-        return Base64.encodeBase64String((email + ":" + authenticationString).getBytes());
     }
 }

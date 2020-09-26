@@ -1,10 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
 import br.edu.ifrs.canoas.richardburton.DAO;
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
 import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
-import br.edu.ifrs.canoas.richardburton.session.Session;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,33 +23,6 @@ public class UserServiceImpl extends EntityServiceImpl<User, Long> implements Us
     @Override
     protected void throwValidationException(Set<ConstraintViolation<User>> violations) throws UserValidationException {
         throw new UserValidationException(violations);
-    }
-
-    public User create(User user) throws DuplicateEntityException, EntityValidationException {
-
-        if(user == null) {
-
-            throw new UserValidationException("An user must be provided");
-        }
-
-        try {
-
-            retrieve(user.getEmail());
-            throw new DuplicateUserException("An user with the provided email address " + user.getEmail() + " has already been registered");
-
-        } catch (UserNotFoundException e) {
-
-            /*
-            if(user.getAuthenticationString() == null || user.getAuthenticationString().trim().isEmpty()) {
-
-                throw new UserValidationException("The authentication string must not be null, empty or blank");
-            }
-            */
-
-            user = super.create(user);
-            user.setAuthenticationString(Session.digest(user.getAuthenticationString()));
-            return user;
-        }
     }
 
     @Override

@@ -7,11 +7,6 @@ import javax.ws.rs.core.Response;
 @Path("/users")
 public interface UserResource {
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response create(User user, @HeaderParam("rb-authentication-string") String authenticationString);
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response retrieve();

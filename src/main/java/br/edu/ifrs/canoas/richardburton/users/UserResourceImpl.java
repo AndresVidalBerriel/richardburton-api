@@ -17,27 +17,6 @@ public class UserResourceImpl implements UserResource {
     private UserService userService;
 
     @Override
-    public Response create(User user, String authenticationString) {
-
-        if (user != null)
-            user.setAuthenticationString(authenticationString);
-
-        try {
-
-            user = userService.create(user);
-            return Response.status(Response.Status.CREATED).entity(user).build();
-
-        } catch (DuplicateEntityException e) {
-
-            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
-
-        } catch (EntityValidationException e) {
-
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
-
-    @Override
     public Response retrieve() {
 
         List<User> users = userService.retrieve();
