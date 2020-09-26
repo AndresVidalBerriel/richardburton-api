@@ -38,7 +38,7 @@ public class Credentials implements Cloneable {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection
-    private EnumSet<Permissions> permissions;
+    private Set<Permissions> permissions;
 
     @ManyToMany
     private Set<CredentialsGroup> groups;
@@ -69,7 +69,7 @@ public class Credentials implements Cloneable {
         this.token = token;
     }
 
-    public EnumSet<Permissions> getPermissions() {
+    public Set<Permissions> getPermissions() {
         return permissions;
     }
 

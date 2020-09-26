@@ -13,7 +13,7 @@ public class CredentialsGroup implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection
-    private EnumSet<Permissions> permissions;
+    private Set<Permissions> permissions;
 
     @ManyToMany
     private Set<Credentials> members;
@@ -26,11 +26,11 @@ public class CredentialsGroup implements Serializable {
         this.name = name;
     }
 
-    public EnumSet<Permissions> getPermissions() {
+    public Set<Permissions> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(EnumSet<Permissions> permissions) {
+    public void setPermissions(Set<Permissions> permissions) {
         this.permissions = permissions;
     }
 
