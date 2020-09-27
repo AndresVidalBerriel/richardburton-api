@@ -10,19 +10,19 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@NamedQueries({
-        @NamedQuery(
-                name="Credentials.getDirectPermissions",
-                query="SELECT c.permissions " +
-                        "FROM Credentials c " +
-                        "WHERE c.identifier = :identifier"
-        ),
-        @NamedQuery(
-                name="Credentials.getGroupPermissions",
-                query="SELECT g.permissions " +
-                        "FROM Credentials c JOIN c.groups g " +
-                        "WHERE c.identifier = :identifier"
-        )
+@NamedNativeQueries({
+  @NamedNativeQuery(
+    name = "Credentials.getDirectPermissions",
+    query = "SELECT c.permissions " +
+      "FROM Credentials c " +
+      "WHERE c.identifier = :identifier"
+  ),
+  @NamedNativeQuery(
+    name = "Credentials.getGroupPermissions",
+    query = "SELECT g.permissions " +
+      "FROM Credentials c JOIN c.groups g " +
+      "WHERE c.identifier = :identifier"
+  )
 })
 public class Credentials implements Cloneable {
 
@@ -43,7 +43,8 @@ public class Credentials implements Cloneable {
     @ManyToMany
     private Set<CredentialsGroup> groups;
 
-    public Credentials(){}
+    public Credentials() {
+    }
 
     public String getIdentifier() {
         return identifier;
@@ -104,7 +105,7 @@ public class Credentials implements Cloneable {
         if (o == null || getClass() != o.getClass()) return false;
         Credentials that = (Credentials) o;
         return Objects.equals(identifier, that.identifier) &&
-                Objects.equals(secret, that.secret);
+          Objects.equals(secret, that.secret);
     }
 
     @Override
