@@ -1,21 +1,22 @@
 package br.edu.ifrs.canoas.richardburton.auth;
 
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.EnumSet;
 import java.util.Set;
 
 @Entity
-public class CredentialsGroup implements Serializable {
+public class CredentialsGroup extends ServiceEntity implements Serializable {
 
     @Id
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Permissions> permissions;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Credentials> members;
 
     public String getName() {

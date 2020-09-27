@@ -18,4 +18,6 @@ public interface DAO<E, ID> extends Serializable {
     List<E> retrieve();
 
     List<E> retrieve(ID afterId, int pageSize);
+
+    boolean exists(ID id);
 }

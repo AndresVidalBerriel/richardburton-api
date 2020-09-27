@@ -66,4 +66,9 @@ public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
 
         return (List<E>) query.getResultList();
     }
+
+    @Override
+    public boolean exists(ID id) {
+        return retrieve(id) != null;
+    }
 }

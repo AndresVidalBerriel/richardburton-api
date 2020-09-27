@@ -20,30 +20,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Inject
     private CredentialsDAO credentialsDAO;
 
-    @Inject
-    private CredentialsGroupDAO credentialsGroupDAO;
-
-    @Override
-    public ServiceResponse register(Credentials credentials) {
-        return register(credentials.getIdentifier(), credentials, credentialsDAO);
-    }
-
-    @Override
-    public ServiceResponse register(CredentialsGroup group) {
-        return register(group.getName(), group, credentialsGroupDAO);
-    }
-
-    @Override
-    public ServiceResponse deleteCredentials(String identifier) {
-        return delete(identifier, credentialsDAO);
-
-    }
-
-    @Override
-    public ServiceResponse deleteCredentialsGroup(String name) {
-        return delete(name, credentialsGroupDAO);
-    }
-
     @Override
     public ServiceResponse authenticate(Credentials credentials) {
 
@@ -68,11 +44,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         credentials.setToken(JWT.issueToken(credentials.getIdentifier()));
         return credentialsDAO.update(credentials);
-    }
-
-    @Override
-    public List<CredentialsGroup> retrieveGroups() {
-        return credentialsGroupDAO.retrieve();
     }
 
     private ServiceResponse authenticateBearer(String token) {
@@ -112,19 +83,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             throw new RuntimeException(e);
         }
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private ServiceResponse register(String id, Object e, DAO dao){
-        return dao.exists(id)
-          ? ServiceStatus.CONFLICT
-          : (ServiceResponse) dao.create(e);
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private ServiceResponse delete(String id, DAO dao){
-        if(!dao.exists(id)) return ServiceStatus.NOT_FOUND;
-        dao.delete(id);
-        return ServiceStatus.OK;
     }
 }

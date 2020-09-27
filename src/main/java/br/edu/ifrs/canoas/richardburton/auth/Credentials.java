@@ -1,6 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.auth;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +10,7 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
+
 @NamedNativeQueries({
   @NamedNativeQuery(
     name = "Credentials.getDirectPermissions",
@@ -24,7 +25,9 @@ import java.util.Set;
       "WHERE c.identifier = :identifier"
   )
 })
-public class Credentials implements Cloneable {
+
+@Entity
+public class Credentials extends ServiceEntity implements Cloneable {
 
     @Id
     private String identifier;
