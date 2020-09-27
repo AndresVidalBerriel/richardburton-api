@@ -1,7 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,15 +25,23 @@ public class UserResourceImpl implements UserResource {
     @Override
     public Response retrieve(Long id) {
 
-        User user = userService.retrieve(id);
+        ServiceResponse response = userService.retrieve(id);
 
-        if (user != null) {
+        switch(response.status()) {
+            case NOT_FOUND:
+                return Response
+                  .status(Response.Status.NOT_FOUND)
+                  .build();
 
-            return Response.ok(user).build();
+            case OK:
+                return Response
+                  .ok(response.entity())
+                  .build();
 
-        } else {
-
-            return Response.status(Response.Status.NOT_FOUND).build();
+            default:
+                return Response
+                  .status(response.status().toHttpStatus())
+                  .build();
         }
     }
 }

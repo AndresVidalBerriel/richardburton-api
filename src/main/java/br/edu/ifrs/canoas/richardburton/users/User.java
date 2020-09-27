@@ -1,12 +1,11 @@
 package br.edu.ifrs.canoas.richardburton.users;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @JsonInclude(Include.NON_NULL)
 @Table(name = "_User")
-public class User {
+public class User extends ServiceEntity {
 
     public static final String EMAIL_FORMAT = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 

@@ -2,12 +2,12 @@ package br.edu.ifrs.canoas.richardburton.session;
 
 import br.edu.ifrs.canoas.richardburton.auth.*;
 import br.edu.ifrs.canoas.richardburton.users.User;
-import br.edu.ifrs.canoas.richardburton.users.UserNotFoundException;
 import br.edu.ifrs.canoas.richardburton.users.UserService;
-import br.edu.ifrs.canoas.richardburton.users.UserValidationException;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.security.Provider;
 
 @Stateless
 public class SessionServiceImpl implements SessionService {
@@ -19,10 +19,18 @@ public class SessionServiceImpl implements SessionService {
     private AuthenticationService authenticationService;
 
     @Override
-    public Session create(Credentials credentials) throws AuthenticationFailedException, UserValidationException, UserNotFoundException {
+    public ServiceResponse create(Credentials credentials) {
 
-        credentials = authenticationService.authenticate(credentials);
-        User user = userService.retrieve(credentials.getIdentifier());
-        return new Session(credentials.getToken(), user);
+        ServiceResponse response = authenticationService.authenticate(credentials);
+
+        if(response.ok()) {
+
+            credentials = (Credentials) response;
+            response = userService.retrieve(credentials.getIdentifier());
+            return response.ok()
+              ? new Session(credentials.getToken(), (User) response)
+              : response;
+
+        } else return response;
     }
 }

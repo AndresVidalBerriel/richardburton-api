@@ -1,25 +1,27 @@
 package br.edu.ifrs.canoas.richardburton;
 
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+
 import javax.ejb.Local;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
 @Local
-public interface EntityService<E, ID> {
+public interface EntityService<E extends ServiceEntity, ID> {
 
-    E create(E e) throws EntityValidationException, DuplicateEntityException;
+    ServiceResponse create(E e);
 
-    E retrieve(ID id);
+    ServiceResponse create(Set<E> es);
 
-    E update(E e) throws EntityValidationException;
+    ServiceResponse retrieve(ID id);
 
-    void delete(ID id);
+    ServiceResponse update(E e);
 
-    List<E> create(List<E> es) throws EntityValidationException, DuplicateEntityException;
+    ServiceResponse delete(ID id);
 
-    Set<E> create(Set<E> es) throws EntityValidationException, DuplicateEntityException;
+    ServiceResponse validate(E e);
 
     List<E> retrieve();
-
-    void validate(E e) throws EntityValidationException;
 }

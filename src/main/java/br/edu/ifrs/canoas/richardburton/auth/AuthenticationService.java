@@ -1,15 +1,24 @@
 package br.edu.ifrs.canoas.richardburton.auth;
 
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface AuthenticationService {
 
-    void register(Credentials credentials);
+    ServiceResponse register(Credentials credentials);
 
-    void register(CredentialsGroup credentialsGroup);
+    ServiceResponse register(CredentialsGroup group);
 
-    Credentials authenticate(Credentials credentials) throws AuthenticationFailedException;
+    ServiceResponse deleteCredentials(String identifier);
 
-    Credentials refreshToken(Credentials credentials) throws AuthenticationFailedException;
+    ServiceResponse deleteCredentialsGroup(String name);
+
+    ServiceResponse authenticate(Credentials credentials);
+
+    ServiceResponse refreshToken(Credentials credentials);
+
+    List<CredentialsGroup> retrieveGroups();
 }

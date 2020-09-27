@@ -2,11 +2,11 @@ package br.edu.ifrs.canoas.richardburton.users;
 
 import br.edu.ifrs.canoas.richardburton.DAO;
 import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 @Stateless
@@ -21,24 +21,13 @@ public class UserServiceImpl extends EntityServiceImpl<User, Long> implements Us
     }
 
     @Override
-    protected void throwValidationException(Set<ConstraintViolation<User>> violations) throws UserValidationException {
-        throw new UserValidationException(violations);
-    }
+    public ServiceResponse retrieve(String email) {
 
-    @Override
-    public User retrieve(String email) throws UserValidationException, UserNotFoundException {
-
-        if (email == null) {
-
-            throw new UserValidationException("No email was provided.");
-
-        } if (!Pattern.matches(User.EMAIL_FORMAT, email)) {
-
-            throw new UserValidationException("The format of the provided email " + email + " is not in correct.");
-        }
+        if (email == null || !Pattern.matches(User.EMAIL_FORMAT, email))
+            return ServiceStatus.INVALID_ENTITY;
 
         User user = userDAO.retrieve(email);
-        if(user != null) return user;
-        else throw new UserNotFoundException("No user found with the email " + email);
+        return user == null ? ServiceStatus.NOT_FOUND : user;
     }
+
 }

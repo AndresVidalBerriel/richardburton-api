@@ -1,6 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 import br.edu.ifrs.canoas.richardburton.util.YearAttributeConverter;
 import br.edu.ifrs.canoas.richardburton.util.YearFieldBridge;
 import br.edu.ifrs.canoas.richardburton.util.YearSerializer;
@@ -22,7 +23,7 @@ import java.time.Year;
 @Entity
 @JsonInclude(Include.NON_NULL)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "title", "publisher", "year", "country"}))
-public class Publication {
+public class Publication extends ServiceEntity {
 
     @Id
     @GeneratedValue

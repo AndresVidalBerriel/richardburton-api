@@ -1,12 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
 import br.edu.ifrs.canoas.richardburton.users.User;
-import org.jboss.resteasy.util.Hex;
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-class Session {
+class Session extends ServiceEntity {
 
     private String token;
 

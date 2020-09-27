@@ -1,7 +1,7 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
+import br.edu.ifrs.canoas.richardburton.util.ServiceError;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,34 +21,54 @@ public class TranslatedBookResourceImpl extends BookResourceImpl<TranslatedBook>
     @Override
     public Response create(TranslatedBook translation) {
 
-        try {
+        ServiceResponse response = translatedBookService.create(translation);
 
-            translation = translatedBookService.create(translation);
-            return Response.ok(translation).build();
+        switch(response.status()) {
 
-        } catch (DuplicateEntityException e) {
+            case CONFLICT:
+                return Response
+                  .status(Response.Status.CONFLICT)
+                  .build();
 
-            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+            case INVALID_ENTITY:
+                return Response
+                  .status(Response.Status.BAD_REQUEST)
+                  .entity(response.descriptor())
+                  .build();
 
-        } catch (EntityValidationException e) {
+            case OK:
+                return Response
+                  .ok(response.entity())
+                  .build();
 
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            default:
+                return Response
+                  .status(response.status().toHttpStatus())
+                  .build();
         }
-
     }
 
     @Override
     public Response retrieve(Long id) {
 
-        TranslatedBook translation = translatedBookService.retrieve(id);
+        ServiceResponse response = translatedBookService.retrieve(id);
 
-        if (translation != null) {
+        switch(response.status()) {
+            case NOT_FOUND:
+                return Response
+                  .status(Response.Status.NOT_FOUND)
+                  .build();
 
-            return Response.ok(translation).build();
+            case OK:
+                return Response
+                  .ok(response.entity())
+                  .build();
 
-        } else {
-
-            return Response.status(Response.Status.NOT_FOUND).build();
+            default:
+                return Response
+                  .status(response.status().toHttpStatus())
+                  .build();
         }
+
     }
 }

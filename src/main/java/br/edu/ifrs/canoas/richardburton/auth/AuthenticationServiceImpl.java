@@ -1,5 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.auth;
 
+import br.edu.ifrs.canoas.richardburton.DAO;
+import br.edu.ifrs.canoas.richardburton.util.ServiceError;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.jboss.resteasy.util.Hex;
@@ -8,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Stateless
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -19,26 +24,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private CredentialsGroupDAO credentialsGroupDAO;
 
     @Override
-    public void register(Credentials credentials) {
-        credentialsDAO.create(digest(credentials));
+    public ServiceResponse register(Credentials credentials) {
+        return register(credentials.getIdentifier(), credentials, credentialsDAO);
     }
 
     @Override
-    public void register(CredentialsGroup credentialsGroup) {
-        credentialsGroupDAO.create(credentialsGroup);
+    public ServiceResponse register(CredentialsGroup group) {
+        return register(group.getName(), group, credentialsGroupDAO);
     }
 
     @Override
-    public Credentials authenticate(Credentials credentials) throws AuthenticationFailedException {
+    public ServiceResponse deleteCredentials(String identifier) {
+        return delete(identifier, credentialsDAO);
+
+    }
+
+    @Override
+    public ServiceResponse deleteCredentialsGroup(String name) {
+        return delete(name, credentialsGroupDAO);
+    }
+
+    @Override
+    public ServiceResponse authenticate(Credentials credentials) {
 
         Credentials registered = credentialsDAO.retrieve(credentials.getIdentifier());
 
         if(registered == null)
-            throw new AuthenticationFailedException("Credentials not registered.");
+            return ServiceStatus.NOT_FOUND;
 
         if(credentials.getSecret() == null) {
             if (!digest(credentials).equals(registered))
-                throw new AuthenticationFailedException("Secret is not correct.");
+                return ServiceStatus.UNAUTHORIZED;
 
         } else authenticateBearer(credentials.getToken());
 
@@ -46,25 +62,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Credentials refreshToken(Credentials credentials) throws AuthenticationFailedException {
-        credentials = authenticate(credentials);
+    public ServiceResponse refreshToken(Credentials credentials) {
+        ServiceResponse response = authenticate(credentials);
+        if(!response.ok()) return response;
+
         credentials.setToken(JWT.issueToken(credentials.getIdentifier()));
         return credentialsDAO.update(credentials);
     }
 
-    private void authenticateBearer(String token) throws AuthenticationFailedException {
+    @Override
+    public List<CredentialsGroup> retrieveGroups() {
+        return credentialsGroupDAO.retrieve();
+    }
+
+    private ServiceResponse authenticateBearer(String token) {
 
         try {
 
             JWT.decodeToken(token);
+            return ServiceStatus.OK;
 
         } catch (ExpiredJwtException e) {
 
-            throw new AuthenticationFailedException("Token expired.");
+            return ServiceStatus.EXPIRED_ENTITY;
 
         } catch (JwtException e) {
 
-            throw new AuthenticationFailedException("Invalid token");
+            return ServiceStatus.INVALID_ENTITY;
         }
     }
 
@@ -88,6 +112,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             throw new RuntimeException(e);
         }
+    }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private ServiceResponse register(String id, Object e, DAO dao){
+        return dao.exists(id)
+          ? ServiceStatus.CONFLICT
+          : (ServiceResponse) dao.create(e);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private ServiceResponse delete(String id, DAO dao){
+        if(!dao.exists(id)) return ServiceStatus.NOT_FOUND;
+        dao.delete(id);
+        return ServiceStatus.OK;
     }
 }

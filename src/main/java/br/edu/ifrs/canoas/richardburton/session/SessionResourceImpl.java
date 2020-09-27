@@ -1,14 +1,13 @@
 package br.edu.ifrs.canoas.richardburton.session;
 
 import br.edu.ifrs.canoas.richardburton.auth.*;
-import br.edu.ifrs.canoas.richardburton.users.UserNotFoundException;
-import br.edu.ifrs.canoas.richardburton.users.UserValidationException;
+import br.edu.ifrs.canoas.richardburton.util.ServicePrimitive;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 @Stateless
@@ -25,63 +24,140 @@ public class SessionResourceImpl implements SessionResource {
 
     public Response create(String auth) {
 
-        try {
+        ServiceResponse response = AuthenticationParser.parseBasic(auth);
+        if (!response.ok())
+            return Response
+              .status(Response.Status.BAD_REQUEST)
+              .entity("Invalid basic auth header.")
+              .build();
 
-            Session session = sessionService.create(AuthenticationParser.parseBasic(auth));
-            return Response.ok(session.getUser()).header("rb-authorization", session.getToken()).build();
+        response = sessionService.create((Credentials) response);
+        switch (response.status()) {
+            case NOT_FOUND:
+                return Response
+                  .status(Response.Status.NOT_FOUND)
+                  .entity("User not found.")
+                  .build();
 
-        } catch (AuthenticationParseException | UserValidationException e) {
+            case UNAUTHORIZED:
+                return Response
+                  .status(Response.Status.UNAUTHORIZED)
+                  .header("WWW-Authenticate", "Basic")
+                  .build();
 
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            case EXPIRED_ENTITY:
+                return Response
+                  .status(Response.Status.UNAUTHORIZED)
+                  .entity("Token expired.")
+                  .header("WWW-Authenticate", "Basic")
+                  .build();
 
-        } catch (AuthenticationFailedException e) {
+            case INVALID_ENTITY:
+                return Response
+                  .status(Response.Status.BAD_REQUEST)
+                  .entity("Invalid email address.")
+                  .build();
 
-            return Response.status(Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic").build();
+            case OK:
+                Session session = (Session) response;
+                return Response
+                  .ok(session.getUser())
+                  .header("RB-authorization", session.getToken())
+                  .build();
 
-        } catch (UserNotFoundException e) {
-
-            return Response.status(Status.NOT_FOUND).build();
+            default:
+                return Response
+                  .status(Response.Status.INTERNAL_SERVER_ERROR)
+                  .entity(response.descriptor())
+                  .build();
         }
+
     }
 
     @Override
     public Response refresh(String auth) {
 
-        try {
-            String token = AuthenticationParser.parseBearer(auth);
-            Credentials credentials = new CredentialsBuilder().token(token).build();
-            String refreshed = authenticationService.refreshToken(credentials).getToken();
+        ServiceResponse response = AuthenticationParser.parseBearer(auth);
+        if (!response.ok())
+            return Response
+              .status(Response.Status.BAD_REQUEST)
+              .entity("Invalid basic auth header.")
+              .build();
 
-            return Response.ok(refreshed).build();
+        String token = ((ServicePrimitive<String>) response).unwrap();
+        Credentials credentials = new CredentialsBuilder()
+          .token(token)
+          .build();
 
-        } catch (AuthenticationFailedException e) {
+        response = authenticationService.refreshToken(credentials);
+        switch (response.status()) {
+            case EXPIRED_ENTITY:
+                return Response
+                  .status(Response.Status.UNAUTHORIZED)
+                  .entity("Token expired.")
+                  .header("WWW-Authenticate", "Basic")
+                  .build();
 
-            return Response.status(Status.UNAUTHORIZED).entity(e.getMessage()).build();
+            case INVALID_ENTITY:
+                return Response
+                  .status(Response.Status.BAD_REQUEST)
+                  .entity("Invalid token.")
+                  .build();
 
-        } catch (AuthenticationParseException e) {
+            case OK:
+                return Response
+                  .ok()
+                  .header("RB-authorization", credentials.getToken())
+                  .build();
 
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-
+            default:
+                return Response
+                  .status(Response.Status.INTERNAL_SERVER_ERROR)
+                  .entity(response.descriptor())
+                  .build();
         }
     }
 
     @Override
     public Response verify(String auth) {
 
-        try {
-            String token = AuthenticationParser.parseBearer(auth);
-            Credentials credentials = new CredentialsBuilder().token(token).build();
-            authenticationService.authenticate(credentials);
+        ServiceResponse response = AuthenticationParser.parseBearer(auth);
+        if (!response.ok())
+            return Response
+              .status(Response.Status.BAD_REQUEST)
+              .entity("Invalid basic auth header.")
+              .build();
 
-            return Response.status(Status.OK).build();
+        String token = ((ServicePrimitive<String>) response).unwrap();
+        Credentials credentials = new CredentialsBuilder()
+          .token(token)
+          .build();
 
-        } catch (AuthenticationFailedException e) {
+        response = authenticationService.authenticate(credentials);
+        switch (response.status()) {
+            case EXPIRED_ENTITY:
+                return Response
+                  .status(Response.Status.UNAUTHORIZED)
+                  .entity("Token expired.")
+                  .header("WWW-Authenticate", "Basic")
+                  .build();
 
-            return Response.status(Status.UNAUTHORIZED).build();
+            case INVALID_ENTITY:
+                return Response
+                  .status(Response.Status.BAD_REQUEST)
+                  .entity("Invalid token.")
+                  .build();
 
-        } catch (AuthenticationParseException e) {
+            case OK:
+                return Response
+                  .ok()
+                  .build();
 
-            return Response.status(Status.BAD_REQUEST).build();
+            default:
+                return Response
+                  .status(Response.Status.INTERNAL_SERVER_ERROR)
+                  .entity(response.descriptor())
+                  .build();
         }
     }
 }

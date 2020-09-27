@@ -1,7 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -21,18 +20,6 @@ public class TranslatedBookServiceImpl extends BookServiceImpl<TranslatedBook> i
     }
 
     @Override
-    protected void throwValidationException(Set<ConstraintViolation<TranslatedBook>> violations) throws TranslatedBookValidationException {
-
-        throw new TranslatedBookValidationException(violations);
-    }
-
-    @Override
-    protected void throwDuplicateException() throws TranslatedBookDuplicateException {
-
-        throw new TranslatedBookDuplicateException("A Translated Book containing the provided data is already registered.");
-    }
-
-    @Override
     protected String[] getDefaultSearchFields() {
 
         return new String[]{
@@ -45,23 +32,16 @@ public class TranslatedBookServiceImpl extends BookServiceImpl<TranslatedBook> i
     }
 
     @Override
-    public TranslatedBook create(TranslatedBook translation) throws EntityValidationException, DuplicateEntityException {
-
-        if(translation == null) {
-
-            throw new TranslatedBookValidationException("A translated book must be provided.");
-        }
+    public ServiceResponse create(TranslatedBook translation) {
 
         OriginalBook original = translation.getOriginal();
-        original = originalBookService.create(original);
+
+        ServiceResponse response = originalBookService.create(original);
+        if(!response.ok()) return response;
+        original = (OriginalBook) response;
+
         translation.setOriginal(original);
 
         return super.create(translation);
-    }
-
-    @Override
-    public TranslatedBook retrieve(Long id) {
-
-        return translatedBookDAO.retrieve(id);
     }
 }

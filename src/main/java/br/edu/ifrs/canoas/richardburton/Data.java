@@ -77,14 +77,8 @@ public class Data {
 
                 original.setTranslations(new ArrayList<>(Collections.singletonList(translation)));
 
-                try {
+                translatedBookService.create(translation);
 
-                    translatedBookService.create(translation);
-
-                } catch (EntityValidationException | DuplicateEntityException e) {
-
-                    e.printStackTrace();
-                }
             }
 
         } catch (IOException e) {

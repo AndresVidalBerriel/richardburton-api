@@ -18,16 +18,6 @@ public class OriginalBookServiceImpl extends BookServiceImpl<OriginalBook> imple
     }
 
     @Override
-    protected void throwValidationException(Set<ConstraintViolation<OriginalBook>> violations) throws OriginalBookValidationException {
-
-        throw new OriginalBookValidationException(violations);
-    }
-
-    @Override
-    protected void throwDuplicateException() {
-    }
-
-    @Override
     protected String[] getDefaultSearchFields() {
 
         return new String[]{

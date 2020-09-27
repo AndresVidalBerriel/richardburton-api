@@ -1,5 +1,6 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,7 +23,7 @@ import java.util.List;
 @Indexed
 @Analyzer(definition = "authorsAnalyzer")
 @JsonInclude(Include.NON_NULL)
-public class Author {
+public class Author extends ServiceEntity {
 
     @Id
     @GeneratedValue

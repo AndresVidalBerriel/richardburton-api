@@ -1,21 +1,22 @@
 package br.edu.ifrs.canoas.richardburton;
 
+import br.edu.ifrs.canoas.richardburton.util.*;
+
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class EntityServiceImpl<E, ID> implements EntityService<E, ID> {
+public abstract class EntityServiceImpl<E extends ServiceEntity, ID> implements EntityService<E, ID> {
 
     private DAO<E, ID> dao;
 
     protected abstract DAO<E, ID> getDAO();
-
-    protected abstract void throwValidationException(Set<ConstraintViolation<E>> violations) throws EntityValidationException;
 
     @PostConstruct
     private void init() {
@@ -24,53 +25,59 @@ public abstract class EntityServiceImpl<E, ID> implements EntityService<E, ID> {
     }
 
     @Override
-    public void validate(E e) throws EntityValidationException {
+    public ServiceResponse validate(E e) {
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<E>> violations = validator.validate(e);
-        if (violations.size() > 0) throwValidationException(violations);
+
+        return violations.size() > 0
+          ? new ServiceError(ServiceStatus.INVALID_ENTITY, violations)
+          : ServiceStatus.OK;
     }
 
     @Override
-    public E create(E e) throws EntityValidationException, DuplicateEntityException {
+    public ServiceResponse create(E e) {
 
-        validate(e);
-        return dao.create(e);
+        ServiceResponse response = validate(e);
+        return response.ok()
+          ? dao.create(e)
+          : response;
     }
 
     @Override
-    public E update(E e) throws EntityValidationException {
-
-        validate(e);
-        return dao.update(e);
+    public ServiceResponse create(Set<E> es) {
+        Set<E> set = new HashSet<>();
+        for(E e : es) {
+            ServiceResponse response = create(e);
+            if(!response.ok()) return response;
+            set.add((E) response);
+        }
+        return new ServiceSet<>(set);
     }
 
     @Override
-    public E retrieve(ID id) {
+    public ServiceResponse update(E e) {
 
-        return dao.retrieve(id);
+        ServiceResponse response = validate(e);
+        return response.ok()
+          ? dao.update(e)
+          : response;
     }
 
     @Override
-    public void delete(ID id) {
-
-        dao.delete(id);
+    public ServiceResponse retrieve(ID id) {
+        E e = dao.retrieve(id);
+        return e == null ? ServiceStatus.NOT_FOUND : e;
     }
 
     @Override
-    public List<E> create(List<E> es) throws EntityValidationException, DuplicateEntityException {
-
-        List<E> created = new ArrayList<>();
-        for (E e : es) created.add(create(e));
-        return created;
-    }
-
-    @Override
-    public Set<E> create(Set<E> es) throws EntityValidationException, DuplicateEntityException {
-
-        Set<E> created = new HashSet<>();
-        for (E e : es) created.add(create(e));
-        return created;
+    public ServiceResponse delete(ID id) {
+        try {
+            dao.delete(id);
+            return ServiceStatus.OK;
+        } catch(EntityNotFoundException e) {
+            return ServiceStatus.NOT_FOUND;
+        }
     }
 
     @Override

@@ -1,8 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
 import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,23 +21,23 @@ public class AuthorServiceImpl extends EntityServiceImpl<Author, Long> implement
         return authorDAO;
     }
 
-    @Override
-    protected void throwValidationException(Set<ConstraintViolation<Author>> violations) throws AuthorValidationException {
 
-        throw new AuthorValidationException(violations);
+    @Override
+    public ServiceResponse create(Author author) {
+
+        ServiceResponse response = retrieve(author.getName());
+        return response.ok()
+          ? response
+          : super.create(author);
     }
 
     @Override
-    public Author create(Author author) throws EntityValidationException, DuplicateEntityException {
+    public ServiceResponse retrieve(String name) {
 
-        Author registered = retrieve(author.getName());
-        return registered != null ? registered : super.create(author);
-    }
-
-    @Override
-    public Author retrieve(String name) {
-
-        return authorDAO.retrieve(name);
+        Author author = authorDAO.retrieve(name);
+        return author == null
+          ? ServiceStatus.NOT_FOUND
+          : author;
     }
 
     @Override

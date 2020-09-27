@@ -1,14 +1,13 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
 import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+import br.edu.ifrs.canoas.richardburton.util.ServiceSet;
+import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,8 +32,6 @@ public abstract class BookServiceImpl<E extends Book> extends EntityServiceImpl<
 
     protected abstract String[] getDefaultSearchFields();
 
-    protected abstract void throwDuplicateException() throws DuplicateEntityException;
-
     @Override
     public List<E> search(Long afterId, int pageSize, String queryString, boolean useDefaultFields) {
 
@@ -43,44 +40,63 @@ public abstract class BookServiceImpl<E extends Book> extends EntityServiceImpl<
 
 
     @Override
-    public E create(E book) throws EntityValidationException, DuplicateEntityException {
+    public ServiceResponse create(E book) {
 
-        E registered = retrieve(book);
+        ServiceResponse response = retrieve(book);
 
-        if (registered == null) {
+        if (response.status() == ServiceStatus.NOT_FOUND) {
+
+            // Create authors
 
             for (Author author : book.getAuthors()) author.addBook(book);
-            Set<Author> authors = authorService.create(book.getAuthors());
+            response = authorService.create(book.getAuthors());
+            if(!response.ok()) return response;
+            Set<Author> authors = ((ServiceSet<Author>) response).unwrap();
+
+            // Create book
+
             book.setAuthors(authors);
 
-            book = super.create(book);
+            response = super.create(book);
+            if(!response.ok()) return response;
+            book = (E) response;
+
+            // Create publications
 
             for (Publication publication : book.getPublications()) publication.setBook(book);
-            Set<Publication> publications = publicationService.create(book.getPublications());
+            response = publicationService.create(book.getPublications());
+            if(!response.ok()) return response;
+            Set<Publication> publications = ((ServiceSet<Publication>) response).unwrap();
+
             book.setPublications(publications);
 
             return book;
 
         } else {
 
+            E registered = (E) response;
+
             for (Publication publication : book.getPublications()) publication.setBook(registered);
 
-            try {
+            response = publicationService.merge(registered.getPublications(), book.getPublications());
 
-                Set<Publication> publications = publicationService.merge(registered.getPublications(), book.getPublications());
+            if(response.ok()) {
+
+                Set<Publication> publications = ((ServiceSet<Publication>) response).unwrap();
                 registered.setPublications(publications);
                 return update(registered);
 
-            } catch (PublicationDuplicateException e) {
+            } else if(response.status() == ServiceStatus.CONFLICT) {
 
-                throwDuplicateException();
-                return registered;
+                if(registered instanceof OriginalBook) return registered;
+
             }
+            return response;
         }
     }
 
     @Override
-    public E retrieve(E book) {
+    public ServiceResponse retrieve(E book) {
 
         if (book.getId() != null) {
 
@@ -104,6 +120,8 @@ public abstract class BookServiceImpl<E extends Book> extends EntityServiceImpl<
             }
         }
 
-        return alreadyRegistered;
+        return alreadyRegistered == null
+          ? ServiceStatus.NOT_FOUND
+          : alreadyRegistered;
     }
 }

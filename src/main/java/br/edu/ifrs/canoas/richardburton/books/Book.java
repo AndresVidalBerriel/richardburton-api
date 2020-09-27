@@ -1,10 +1,8 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonInclude(Include.NON_NULL)
-public abstract class Book {
+public abstract class Book extends ServiceEntity {
 
     @Id
     @GeneratedValue

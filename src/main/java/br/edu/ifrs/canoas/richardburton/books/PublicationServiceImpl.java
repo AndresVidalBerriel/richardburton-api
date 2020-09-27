@@ -1,11 +1,11 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
-import br.edu.ifrs.canoas.richardburton.DuplicateEntityException;
-import br.edu.ifrs.canoas.richardburton.EntityValidationException;
 import br.edu.ifrs.canoas.richardburton.EntityServiceImpl;
+import br.edu.ifrs.canoas.richardburton.util.ServiceResponse;
+import br.edu.ifrs.canoas.richardburton.util.ServiceSet;
+import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,18 +20,12 @@ public class PublicationServiceImpl extends EntityServiceImpl<Publication, Long>
     }
 
     @Override
-    protected void throwValidationException(Set<ConstraintViolation<Publication>> violations) throws EntityValidationException {
-
-        throw new PublicationValidationException(violations);
-    }
-
-    @Override
     public Publication retrieve(Publication publication) {
         return publicationDAO.retrieve(publication);
     }
 
     @Override
-    public Set<Publication> merge(Set<Publication> mainSet, Set<Publication> otherSet) throws EntityValidationException, DuplicateEntityException {
+    public ServiceResponse merge(Set<Publication> mainSet, Set<Publication> otherSet) {
 
         boolean newData = false;
 
@@ -48,10 +42,13 @@ public class PublicationServiceImpl extends EntityServiceImpl<Publication, Long>
 
                 if (merged) {
 
-                    registeredPublication = update(registeredPublication);
-                    mergedSet.add(registeredPublication);
-                    newData = true;
-                    break;
+                    ServiceResponse response = update(registeredPublication);
+
+                    if(response.ok()) {
+                        mergedSet.add((Publication) response);
+                        newData = true;
+                        break;
+                    } else return response;
                 }
 
                 exists = publication.equals(registeredPublication);
@@ -60,16 +57,18 @@ public class PublicationServiceImpl extends EntityServiceImpl<Publication, Long>
 
             if (!exists && !merged) {
 
-                publication = create(publication);
-                mergedSet.add(publication);
-                newData = true;
+                ServiceResponse response = create(publication);
+                if(response.ok()) {
+                    publication = (Publication) response;
+                    mergedSet.add(publication);
+                    newData = true;
+                } else return response;
             }
         }
 
-        if (!newData) throw new PublicationDuplicateException("All the provided publications are already registered.");
-
+        if (!newData) return ServiceStatus.CONFLICT;
         mergedSet.addAll(mainSet);
 
-        return mergedSet;
+        return new ServiceSet<>(mergedSet);
     }
 }
