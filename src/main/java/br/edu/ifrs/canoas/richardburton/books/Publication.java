@@ -1,6 +1,9 @@
 package br.edu.ifrs.canoas.richardburton.books;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
+import br.edu.ifrs.canoas.richardburton.util.YearAttributeConverter;
+import br.edu.ifrs.canoas.richardburton.util.YearFieldBridge;
+import br.edu.ifrs.canoas.richardburton.util.YearSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

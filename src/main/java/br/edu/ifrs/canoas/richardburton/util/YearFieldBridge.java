@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.books;
+package br.edu.ifrs.canoas.richardburton.util;
 
 import org.apache.lucene.document.Document;
 import org.hibernate.search.bridge.FieldBridge;

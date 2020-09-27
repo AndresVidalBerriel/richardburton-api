@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.books;
+package br.edu.ifrs.canoas.richardburton.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

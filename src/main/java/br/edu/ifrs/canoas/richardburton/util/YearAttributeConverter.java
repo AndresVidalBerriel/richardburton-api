@@ -1,4 +1,4 @@
-package br.edu.ifrs.canoas.richardburton.books;
+package br.edu.ifrs.canoas.richardburton.util;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
