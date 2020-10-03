@@ -23,11 +23,36 @@ public class UserResourceImpl implements UserResource {
     }
 
     @Override
+    public Response create(User user, String password) {
+
+        ServiceResponse response = userService.create(user, password);
+
+        switch (response.status()) {
+
+            case OK:
+                return Response
+                  .ok((User) response)
+                  .build();
+
+            case CONFLICT:
+                return Response
+                  .status(Response.Status.CONFLICT)
+                  .build();
+
+            default:
+                return Response
+                  .status(Response.Status.INTERNAL_SERVER_ERROR)
+                  .entity(response.descriptor())
+                  .build();
+        }
+    }
+
+    @Override
     public Response retrieve(Long id) {
 
         ServiceResponse response = userService.retrieve(id);
 
-        switch(response.status()) {
+        switch (response.status()) {
             case NOT_FOUND:
                 return Response
                   .status(Response.Status.NOT_FOUND)

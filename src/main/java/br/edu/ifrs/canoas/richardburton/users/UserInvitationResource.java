@@ -28,7 +28,7 @@ public interface UserInvitationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response confirm(
-      @HeaderParam("RB-authentication-string") String authenticationString,
+      @HeaderParam("RB-password") String authenticationString,
       User user
     );
 

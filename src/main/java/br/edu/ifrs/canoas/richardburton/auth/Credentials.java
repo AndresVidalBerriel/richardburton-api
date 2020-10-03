@@ -2,6 +2,7 @@ package br.edu.ifrs.canoas.richardburton.auth;
 
 import br.edu.ifrs.canoas.richardburton.constraints.NullOrNotBlank;
 import br.edu.ifrs.canoas.richardburton.util.ServiceEntity;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +31,7 @@ import java.util.Set;
 public class Credentials extends ServiceEntity implements Cloneable {
 
     @Id
+    @JsonValue
     private String identifier;
 
     @NotNull
@@ -40,10 +42,11 @@ public class Credentials extends ServiceEntity implements Cloneable {
     private String token;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Permissions> permissions;
 
-    @ManyToMany
+    @JsonBackReference
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     private Set<CredentialsGroup> groups;
 
     public Credentials() {

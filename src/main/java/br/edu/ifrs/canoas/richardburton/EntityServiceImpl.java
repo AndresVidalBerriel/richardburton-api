@@ -4,10 +4,12 @@ import br.edu.ifrs.canoas.richardburton.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Id;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,9 +49,9 @@ public abstract class EntityServiceImpl<E extends ServiceEntity, ID> implements 
     @Override
     public ServiceResponse create(Set<E> es) {
         Set<E> set = new HashSet<>();
-        for(E e : es) {
+        for (E e : es) {
             ServiceResponse response = create(e);
-            if(!response.ok()) return response;
+            if (!response.ok()) return response;
             set.add((E) response);
         }
         return new ServiceSet<>(set);
@@ -75,7 +77,7 @@ public abstract class EntityServiceImpl<E extends ServiceEntity, ID> implements 
         try {
             dao.delete(id);
             return ServiceStatus.OK;
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             return ServiceStatus.NOT_FOUND;
         }
     }

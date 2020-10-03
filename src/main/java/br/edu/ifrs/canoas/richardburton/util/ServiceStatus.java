@@ -30,6 +30,11 @@ public enum ServiceStatus implements ServiceResponse {
         return this;
     }
 
+    @Override
+    public <T> T unwrap(Class<T> type) {
+        throw new UnsupportedOperationException();
+    }
+
     public Response.Status toHttpStatus() {
         if(this == INVALID_ENTITY) return Response.Status.BAD_REQUEST;
         return Response.Status.valueOf(this.name());

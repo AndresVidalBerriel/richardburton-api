@@ -12,6 +12,18 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+
+@NamedQueries({
+  @NamedQuery(
+    name = "User.getEmailById",
+    query = "SELECT email FROM User u WHERE u.id = :id"
+  ),
+  @NamedQuery(
+    name = "User.retrieveByEmail",
+    query = "SELECT u FROM User u WHERE u.email = :email"
+  )
+})
+
 @Entity
 @JsonInclude(Include.NON_NULL)
 @Table(name = "_User")

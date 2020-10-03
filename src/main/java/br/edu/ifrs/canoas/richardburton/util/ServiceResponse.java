@@ -9,4 +9,6 @@ public interface ServiceResponse {
     Object descriptor();
 
     Object entity();
+
+    <T> T unwrap(Class<T> type);
 }

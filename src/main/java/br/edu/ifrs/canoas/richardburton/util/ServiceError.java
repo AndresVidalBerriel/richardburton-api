@@ -29,4 +29,9 @@ public class ServiceError implements ServiceResponse {
     public Object entity() {
         return descriptor;
     }
+
+    @Override
+    public <T> T unwrap(Class<T> type) {
+        throw new UnsupportedOperationException();
+    }
 }

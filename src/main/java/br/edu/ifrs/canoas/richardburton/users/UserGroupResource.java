@@ -20,4 +20,14 @@ public interface UserGroupResource {
     @DELETE
     @Path("/{name}")
     Response delete(@PathParam("name") String name);
+
+    @POST
+    @Path("/{name}/members")
+    @Consumes(MediaType.TEXT_PLAIN)
+    Response addMember(@PathParam("name") String groupName, Long userId);
+
+    @DELETE
+    @Path("/{name}/members/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    Response removeMember(@PathParam("name") String groupName, @PathParam("id") Long userId);
 }

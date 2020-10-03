@@ -11,6 +11,11 @@ public interface UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response retrieve();
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response create(User user, @HeaderParam("RB-password") String password);
+
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

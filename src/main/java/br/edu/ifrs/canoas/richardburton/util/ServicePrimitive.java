@@ -12,4 +12,9 @@ public class ServicePrimitive<T> extends ServiceEntity {
     public T unwrap() {
         return data;
     }
+
+    @Override
+    public <DT> DT unwrap(Class<DT> type) {
+        return type.cast(data);
+    }
 }

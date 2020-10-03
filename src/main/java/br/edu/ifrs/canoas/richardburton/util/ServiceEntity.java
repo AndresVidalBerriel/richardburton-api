@@ -21,4 +21,9 @@ public abstract class ServiceEntity implements ServiceResponse {
     public Object descriptor() {
         return null;
     }
+
+    @Override
+    public <T> T unwrap(Class<T> type) {
+        throw new UnsupportedOperationException();
+    }
 }

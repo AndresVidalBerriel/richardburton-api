@@ -18,8 +18,9 @@ public abstract class DAOImpl<E, ID> implements DAO<E, ID> {
 
     @SuppressWarnings("rawtypes")
     protected Class getEntityClass() {
-        return entity != null ? entity
-                : (entity = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
+        return entity != null
+          ? entity
+          : (entity = (Class) ((ParameterizedType) getClass().getGenericSuperclass())
                         .getActualTypeArguments()[0]);
     }
 

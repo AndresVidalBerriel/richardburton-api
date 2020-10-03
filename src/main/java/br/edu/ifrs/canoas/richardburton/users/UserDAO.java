@@ -8,4 +8,6 @@ import javax.ejb.Local;
 public interface UserDAO extends DAO<User, Long> {
 
     User retrieve(String email);
+
+    String getEmail(Long id);
 }
