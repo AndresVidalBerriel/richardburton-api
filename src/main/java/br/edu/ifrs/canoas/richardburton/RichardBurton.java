@@ -26,6 +26,8 @@ public class RichardBurton {
     private static String JWT_TTL_MS = "jwt.ttlms";
     private static String JWT_TOKEN_ISSUER = "jwt.issuer";
 
+    private static String USER_INVITATION_TTL_HOURS = "userInvitation.ttlhours";
+
     private static Properties properties = null;
 
     private static KeyStore keyStore;
@@ -78,6 +80,11 @@ public class RichardBurton {
         return getProperties().getProperty(JWT_TOKEN_ISSUER);
     }
 
+    public static double getUserInvitationTTLHours() {
+
+        return Double.parseDouble(getProperties().getProperty(USER_INVITATION_TTL_HOURS));
+    }
+
     public static void setup() {
 
         for (String property : new String[]{HOME, INDEX_BASE, KEY_STORE_LOCATION}) {
@@ -118,7 +125,5 @@ public class RichardBurton {
 
             throw new RuntimeException(e);
         }
-
-
     }
 }

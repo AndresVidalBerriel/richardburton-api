@@ -23,13 +23,16 @@ public class UserInvitation extends ServiceEntity {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.ISSUED;
 
     @ManyToOne
     private User issuer;
 
     @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime expiresAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @ElementCollection
@@ -51,6 +54,9 @@ public class UserInvitation extends ServiceEntity {
     }
 
     public void setStatus(Status status) {
+        if(status == Status.ISSUED && expired()) {
+            status = Status.EXPIRED;
+        }
         this.status = status;
     }
 
@@ -84,5 +90,17 @@ public class UserInvitation extends ServiceEntity {
 
     public void setGroups(Set<CredentialsGroup> groups) {
         this.groups = groups;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public boolean expired() {
+        return LocalDateTime.now().isAfter(expiresAt);
     }
 }

@@ -23,13 +23,17 @@ public interface UserInvitationResource {
     @Produces(MediaType.APPLICATION_JSON)
     Response retrieve(@PathParam("email") String email);
 
+    @PATCH
+    @Path("/{email}")
+    Response refresh(@PathParam("email") String email);
+
     @POST
     @Path("/confirmed")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response confirm(
-      @HeaderParam("RB-password") String authenticationString,
-      User user
+      User user,
+      @HeaderParam("RB-password") String authenticationString
     );
 
     @POST
