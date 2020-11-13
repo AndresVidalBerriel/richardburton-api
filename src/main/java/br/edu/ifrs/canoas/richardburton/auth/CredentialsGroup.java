@@ -6,14 +6,23 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
+
+@NamedQueries({
+  @NamedQuery(
+    name = "CredentialsGroup.getNames",
+    query = "SELECT g.name FROM CredentialsGroup g"
+  )
+})
 
 @Entity
 public class CredentialsGroup extends ServiceEntity implements Serializable {
 
     @Id
+    @NotBlank
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -52,6 +61,11 @@ public class CredentialsGroup extends ServiceEntity implements Serializable {
     }
 
     public void remove(Credentials member) { members.remove(member);}
+
+    @Transient
+    public int getMemberCount() {
+        return members.size();
+    }
 
     @Override
     public boolean equals(Object o) {
