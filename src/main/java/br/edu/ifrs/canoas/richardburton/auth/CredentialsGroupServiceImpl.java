@@ -6,6 +6,8 @@ import br.edu.ifrs.canoas.richardburton.util.ServiceStatus;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class CredentialsGroupServiceImpl extends EntityServiceImpl<CredentialsGroup, String> implements CredentialsGroupService{
@@ -42,9 +44,9 @@ public class CredentialsGroupServiceImpl extends EntityServiceImpl<CredentialsGr
         if(!response.ok()) return response;
         CredentialsGroup group = (CredentialsGroup) response;
 
-        Credentials member = new CredentialsBuilder()
-          .identifier(memberId)
-          .build();
+        response = credentialsService.retrieve(memberId);
+        if(!response.ok()) return response;
+        Credentials member = (Credentials) response;
 
         group.add(member);
         credentialsGroupDAO.update(group);
@@ -63,6 +65,22 @@ public class CredentialsGroupServiceImpl extends EntityServiceImpl<CredentialsGr
         Credentials member = (Credentials) response;
 
         group.remove(member);
+        credentialsGroupDAO.update(group);
+        return ServiceStatus.OK;
+    }
+
+    @Override
+    public List<String> getNames() {
+        return credentialsGroupDAO.getNames();
+    }
+
+    @Override
+    public ServiceResponse setPermissions(String groupName, Set<Permissions> permissions) {
+        ServiceResponse response = retrieve(groupName);
+        if(!response.ok()) return response;
+        CredentialsGroup group = (CredentialsGroup) response;
+
+        group.setPermissions(permissions);
         credentialsGroupDAO.update(group);
         return ServiceStatus.OK;
     }
