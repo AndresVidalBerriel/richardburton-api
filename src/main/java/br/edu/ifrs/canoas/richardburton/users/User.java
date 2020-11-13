@@ -49,10 +49,6 @@ public class User extends ServiceEntity {
     @NotBlank
     private String lastName;
 
-    @NotNull
-    @JsonProperty(access = Access.READ_ONLY)
-    private boolean admin;
-
     @NullOrNotBlank
     private String nationality;
 
@@ -108,14 +104,6 @@ public class User extends ServiceEntity {
 
     public void setOccupation(String occupation) {
         this.occupation = occupation;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 
     public Long getId() {
